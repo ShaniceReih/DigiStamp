@@ -4,7 +4,7 @@ import type { FormEvent } from 'react'
 import type { User } from '@supabase/supabase-js'
 import { supabase } from './lib/supabase'
 import './App.css'
-import CashierTest from './CashierTest'
+import DigiStampHome from './DigiStampHome'
 
 type Mode = 'login' | 'signup'
 
@@ -146,7 +146,7 @@ function App() {
           <h1>Welcome to DigiStamp!</h1>
           <p className="subtitle">Scan. Play. Earn. Return.</p>
           <div className="welcome-box">
-            <CashierTest />
+            <DigiStampHome userId={user.id} />
             <p>You're successfully logged in.</p>
             <strong>
               {user.user_metadata?.full_name || user.email}

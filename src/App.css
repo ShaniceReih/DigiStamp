@@ -203,3 +203,88 @@ input:focus {
     font-size: 28px;
   }
 }
+
+
+/* DIGISTAMP CUSTOMER WALLET */
+
+.wallet {
+  margin-top: 25px;
+  text-align: left;
+}
+
+.wallet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.wallet-header h2 {
+  font-size: 20px;
+}
+
+.wallet-refresh {
+  padding: 9px 13px;
+  border: 1px solid #ded2f5;
+  border-radius: 9px;
+  background: white;
+  color: #7139ce;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.wallet-cafe {
+  padding: 20px;
+  margin-bottom: 15px;
+  background: #f7f2ff;
+  border: 1px solid #e9defb;
+  border-radius: 16px;
+}
+
+.wallet-cafe h3 {
+  margin: 0 0 10px;
+  color: #5422a5;
+  font-size: 18px;
+}
+
+.wallet-count {
+  font-weight: 700;
+  color: #7139ce;
+}
+
+.wallet-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 9px;
+  margin: 18px 0;
+}
+
+.wallet-stamp {
+  aspect-ratio: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px dashed #d3bff5;
+  border-radius: 12px;
+  background: white;
+  color: #baa0e2;
+  font-size: 24px;
+}
+
+.wallet-stamp.filled {
+  border: 2px solid #7139ce;
+  background: #7139ce;
+  color: white;
+}
+
+.wallet-points {
+  margin-bottom: 7px;
+  font-weight: 600;
+}
+
+.wallet-note {
+  color: #82778e;
+  font-size: 12px;
+  line-height: 1.6;
+}
