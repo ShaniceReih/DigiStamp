@@ -33,7 +33,9 @@ Rewards belong to a café and use its existing stamp balance. The next unreached
 
 ## Cashier workflow
 
-Assign an existing account using `role = 'cashier'`. Cashiers can share their assigned café QR link and award one stamp for a verified receipt. They cannot edit branding or rewards. The selected café ID is passed to the existing `award_purchase_stamp` RPC, which verifies membership and prevents duplicate receipt credit within that café. Customers can copy their user ID from their wallet for the cashier to enter. Camera scanning, staff invitations, customer search, and transaction reporting are deferred.
+Assign an existing account using `role = 'cashier'`. Cashiers can share their assigned café QR link and award one stamp for a verified receipt. They cannot edit branding or rewards. The selected café ID is passed to the existing `award_purchase_stamp` RPC, which verifies membership and prevents duplicate receipt credit within that café.
+
+Customers open Account to display their personal QR code, which identifies their account across participating cafés. Cashiers choose Scan customer QR and allow camera access; a valid customer code fills the customer ID and closes the camera. The cashier must still verify the purchase, enter a receipt reference, and explicitly award the stamp. Manual ID entry and copying remain available. The QR contains a versioned account identifier, not authentication credentials or permission to award stamps. No database migration is required for customer QR scanning. Camera scanning requires HTTPS (or localhost) and browser camera permission. Staff invitations, customer search, and transaction reporting are deferred.
 
 Staff can also switch to their personal customer wallet. Each café has a separate customer balance and reward list.
 

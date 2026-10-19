@@ -2,6 +2,15 @@
 
 Release versions use semantic versioning. Dates use Asia/Manila time.
 
+## [0.2.0] - 2026-10-19
+
+### Customer QR & Cashier Scanning
+
+- Add customer QR codes to Account and camera scanning to cashier checkout, retaining manual customer ID entry.
+- Validate customer-specific QR payloads and stop the camera on success, close, navigation, or page hiding. Scanning never awards stamps automatically; existing staff permissions and receipt validation still apply.
+- Add automated QR validation tests, permission-denial handling, and manual-entry fallback. No database migration is required.
+- Verified real QR decoding with virtual camera frames, camera cleanup including cancelled startup, and explicit receipt submission. Physical-device camera testing remains pending.
+
 ## [0.1.0] - 2026-10-19
 
 ### Café Customization & App Navigation

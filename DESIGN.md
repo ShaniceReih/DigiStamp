@@ -19,6 +19,7 @@ Use self-hosted Manrope for app text and controls, and Fraunces for the DigiStam
 - Owner customization controls show trial status and become disabled when access expires. Cashiers see checkout and café QR tools; only owners see customization. Billing status remains controlled by the platform.
 - The proposal's customer reference informs the compact brand header, prominent collection panel, separate reward tickets, and bottom navigation (Home, Rewards, Play, Account). Do not pool stamps or imply cross-café rewards. Play and merchant Reports are explicitly marked coming soon; never populate them with invented analytics, prizes, or activated subscription benefits.
 - The desktop merchant reference informs sidebar navigation and a side-by-side branding form/card preview. Retain the earth-tone brand instead of copying the reference's purple palette. Mobile merchant navigation wraps into touch-friendly buttons.
+- Customer Account includes a dark-on-white personal QR with a quiet zone and manual ID fallback. Home offers a My QR code shortcut. Checkout opens the camera only on request, reports permission failures, and retains explicit purchase/receipt verification after scanning.
 
 ## Validation
 

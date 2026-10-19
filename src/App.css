@@ -205,6 +205,14 @@ input[type="color"] { padding: 5px; cursor: pointer; }
 .branding-preview .cafe-card { margin-top: 16px; }
 .reward-editor { padding-block: 24px; border-top: 1px dashed var(--olive); }
 .customer-pass code { display: block; margin: 12px 0; overflow-wrap: anywhere; color: var(--brown); font-size: 12px; }
+.customer-qr { margin-block: 22px; }
+.scan-customer-button { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-bottom: 20px; }
+.scan-customer-button svg { width: 22px; height: 22px; }
+.customer-scanner { margin-bottom: 22px; padding: 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); }
+.scanner-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+.scanner-heading h3 { margin: 0; font-size: 15px; }
+.scanner-heading button { flex-shrink: 0; font-size: 11px; }
+.customer-scanner video { display: block; width: 100%; aspect-ratio: 1; border-radius: 10px; background: var(--brown); object-fit: cover; }
 .cafe-card { color: var(--cafe-ink); background: var(--cafe-paper); border-color: var(--cafe-brand); }
 .cafe-card h3, .cafe-card .wallet-points, .cafe-card .reward-detail, .cafe-card .reward-list { color: var(--cafe-ink); }
 .cafe-card .wallet-count, .cafe-card .wallet-stamp { color: var(--cafe-brand); border-color: var(--cafe-brand); }
