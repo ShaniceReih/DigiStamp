@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import type { User } from '@supabase/supabase-js'
 import { supabase } from './lib/supabase'
@@ -8,10 +8,14 @@ import DigiStampHome from './DigiStampHome'
 import ShopVisit from './ShopVisit'
 import WelcomeScreen from './WelcomeScreen'
 import StampIcon from './StampIcon'
+import UsernameField from './UsernameField'
+import { normalizeUsername, usernameError } from './lib/usernames'
 
 
 
 type Mode = 'login' | 'signup'
+const AdminPanel = lazy(() => import('./AdminPanel'))
+const AccountSettings = lazy(() => import('./AccountSettings'))
 
 function App() {
   const [mode, setMode] = useState<Mode>('signup')
@@ -26,6 +30,10 @@ function App() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [message, setMessage] = useState('')
   const [isError, setIsError] = useState(false)
+  const [username, setUsername] = useState('')
+  const [screen, setScreen] = useState<'app' | 'settings' | 'admin'>('app')
+  const [profileName, setProfileName] = useState('')
+  useEffect(() => { window.scrollTo({ top:0, behavior:'instant' }) }, [screen])
 
   
 const shopSlug = new URLSearchParams(
@@ -47,6 +55,7 @@ const shopSlug = new URLSearchParams(
       supabase.auth.onAuthStateChange((_event, session) => {
         if (active) {
           setUser(session?.user ?? null)
+          if (!session) { setScreen('app'); setProfileName('') }
           setChecking(false)
         }
       })
@@ -57,6 +66,12 @@ const shopSlug = new URLSearchParams(
     }
   }, [])
 
+  useEffect(() => {
+    let active = true
+    if (user?.id) void Promise.resolve(supabase.from('profiles').select('full_name').eq('id', user.id).maybeSingle()).then(({ data }) => { if (active) setProfileName(data?.full_name ?? '') }).catch(() => {})
+    return () => { active = false }
+  }, [user?.id])
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (loading) return
@@ -65,6 +80,7 @@ const shopSlug = new URLSearchParams(
     setIsError(false)
 
     if (mode === 'signup') {
+      if (usernameError(username)) { setMessage(usernameError(username)); setIsError(true); return }
       if (!fullName.trim()) {
         setMessage('Please enter your full name.')
         setIsError(true)
@@ -88,16 +104,23 @@ const shopSlug = new URLSearchParams(
 
     try {
       if (mode === 'signup') {
+        const availability = await supabase.rpc('username_available', { p_username: normalizeUsername(username) })
+        if (availability.error) throw availability.error
+        if (availability.data !== true) throw new Error('This username is already taken or reserved. Please choose another.')
         const { data, error } = await supabase.auth.signUp({
           email: email.trim(),
           password,
           options: {
-            data: { full_name: fullName.trim() },
+            data: { full_name: fullName.trim(), username: normalizeUsername(username) },
             emailRedirectTo: window.location.href,
           },
         })
 
-        if (error) throw error
+        if (error) {
+          const check = await supabase.rpc('username_available', { p_username: normalizeUsername(username) })
+          if (!check.error && check.data === false) throw new Error('This username is already taken. Please choose another.')
+          throw error
+        }
 
         if (data.session) {
           setMessage('Your account has been created!')
@@ -155,18 +178,18 @@ const shopSlug = new URLSearchParams(
         <section className="auth-card dashboard">
           <header className="dashboard-header">
             <div className="app-brand"><span className="app-emblem"><StampIcon /></span><div><h1 className="wordmark">DigiStamp</h1><p className="tagline">Scan. Play. Earn. Return.</p></div></div>
-            <span className="user-avatar" aria-label="Your account">{String(user.user_metadata?.full_name || user.email || 'D').slice(0, 1).toUpperCase()}</span>
+            <button type="button" className="user-avatar" aria-label="Open account settings" onClick={() => setScreen('settings')}>{String(profileName || user.user_metadata?.full_name || user.email || 'D').slice(0, 1).toUpperCase()}</button>
           </header>
           <div className="welcome-box">
-            {shopSlug ? (
+            {screen === 'settings' ? <Suspense fallback={<p role="status">Loading account settings…</p>}><AccountSettings key={user.id} email={user.email ?? ''} onBack={() => setScreen('app')} onAdmin={() => setScreen('admin')} onSaved={setProfileName} onDeleted={() => { setUser(null); setScreen('app'); setProfileName(''); setShowWelcome(true) }} /></Suspense> : screen === 'admin' ? <Suspense fallback={<p role="status">Loading admin panel…</p>}><AdminPanel currentUserId={user.id} onBack={() => setScreen('settings')} /></Suspense> : shopSlug ? (
               <ShopVisit userId={user.id} shopSlug={shopSlug} />
             ) : (
-              <DigiStampHome key={user.id} userId={user.id} userName={String(user.user_metadata?.full_name || '')} email={user.email ?? ''} onSignOut={handleLogout} signingOut={loading} />
+              <DigiStampHome key={user.id} userId={user.id} userName={profileName || String(user.user_metadata?.full_name || '')} email={user.email ?? ''} onSignOut={handleLogout} signingOut={loading} onSettings={() => setScreen('settings')} />
             )}
             <div className="account-details app-account-footer">
               <p>Signed in as</p>
               <strong>
-                {user.user_metadata?.full_name || user.email}
+                {profileName || user.user_metadata?.full_name || user.email}
               </strong>
               <small>{user.email}</small>
             </div>
@@ -217,6 +240,7 @@ const shopSlug = new URLSearchParams(
         </p>
 
         <form onSubmit={handleSubmit}>
+          {mode === 'signup' && <UsernameField value={username} onChange={setUsername} />}
           {mode === 'signup' && (
             <label>
               Full Name

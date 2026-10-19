@@ -10,9 +10,9 @@ import CustomerPass from './CustomerPass'
 type Membership = { shop_id: string; role: 'owner' | 'cashier' }
 type WalletRow = { shop_id: string; stamps: number; points: number }
 
-type Props = { userId: string; userName: string; email: string; onSignOut: () => void; signingOut: boolean }
+type Props = { userId: string; userName: string; email: string; onSignOut: () => void; signingOut: boolean; onSettings: () => void }
 
-export default function DigiStampHome({ userId, userName, email, onSignOut, signingOut }: Props) {
+export default function DigiStampHome({ userId, userName, email, onSignOut, signingOut, onSettings }: Props) {
   const [memberships, setMemberships] = useState<Membership[]>([])
   const [wallet, setWallet] = useState<WalletRow[]>([])
   const [shops, setShops] = useState<Cafe[]>([])
@@ -107,6 +107,7 @@ export default function DigiStampHome({ userId, userName, email, onSignOut, sign
       </section>}
       {customerTab === 'play' && <section className="play-preview"><span className="play-illustration" aria-hidden="true"><StampIcon kind="play" /></span><span className="coming-soon">Coming soon</span><h2>A small moment of fun.</h2><p>Quick café games are on the way. Games and their rewards will become available after a cashier verifies an eligible purchase.</p><p className="wallet-note">No games or prizes are available yet.</p><button className="primary-button" type="button" onClick={() => setCustomerTab('wallet')}>Back to my stamps</button></section>}
       {customerTab === 'account' && <section className="customer-account"><h2>Account</h2><p className="profile-name">{userName || 'DigiStamp member'}</p><p className="subtitle">{email}</p>
+      <button type="button" className="wallet-refresh" onClick={onSettings}>Account settings</button>
       <CustomerPass userId={userId} />
       {error && <p className="error" role="status">{error}</p>}
       <button type="button" className="text-button sign-out" onClick={onSignOut} disabled={signingOut}>{signingOut ? 'Signing out…' : 'Sign Out'}</button>
