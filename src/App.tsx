@@ -5,6 +5,9 @@ import type { User } from '@supabase/supabase-js'
 import { supabase } from './lib/supabase'
 import './App.css'
 import DigiStampHome from './DigiStampHome'
+import ShopVisit from './ShopVisit'
+
+
 
 type Mode = 'login' | 'signup'
 
@@ -20,6 +23,11 @@ function App() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [message, setMessage] = useState('')
   const [isError, setIsError] = useState(false)
+
+  
+const shopSlug = new URLSearchParams(
+  window.location.search
+).get('shop')
 
   useEffect(() => {
     let active = true
@@ -82,7 +90,7 @@ function App() {
           password,
           options: {
             data: { full_name: fullName.trim() },
-            emailRedirectTo: window.location.origin,
+            emailRedirectTo: window.location.href,
           },
         })
 
@@ -146,7 +154,14 @@ function App() {
           <h1>Welcome to DigiStamp!</h1>
           <p className="subtitle">Scan. Play. Earn. Return.</p>
           <div className="welcome-box">
-            <DigiStampHome userId={user.id} />
+            {shopSlug ? (
+  <ShopVisit
+    userId={user.id}
+    shopSlug={shopSlug}
+  />
+) : (
+  <DigiStampHome userId={user.id} />
+)}
             <p>You're successfully logged in.</p>
             <strong>
               {user.user_metadata?.full_name || user.email}

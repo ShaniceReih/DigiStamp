@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase'
 import CashierTest from './CashierTest'
+import ShopQRCode from './ShopQRCode'
 
 type RoleStatus = 'loading' | 'staff' | 'customer' | 'error'
 
@@ -96,8 +97,13 @@ export default function DigiStampHome({ userId }: Props) {
 
   // Staff interface
   if (role === 'staff') {
-    return <CashierTest />
-  }
+  return (
+    <>
+      <ShopQRCode userId={userId} />
+      <CashierTest />
+    </>
+  )
+}
 
   // Customer interface
   return (
