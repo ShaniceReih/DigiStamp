@@ -2,13 +2,9 @@
 import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase'
 import StampIcon from './StampIcon'
-
-type Shop = {
-  id: string
-  name: string
-  description: string | null
-  address: string | null
-}
+import LoyaltyCard from './LoyaltyCard'
+import { cafeColumns } from './lib/loyalty'
+import type { Cafe, Reward } from './lib/loyalty'
 
 type Balance = {
   stamps: number
@@ -24,7 +20,8 @@ export default function ShopVisit({
   userId,
   shopSlug,
 }: Props) {
-  const [shop, setShop] = useState<Shop | null>(null)
+  const [shop, setShop] = useState<Cafe | null>(null)
+  const [rewards, setRewards] = useState<Reward[]>([])
   const [balance, setBalance] = useState<Balance | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -35,12 +32,15 @@ export default function ShopVisit({
     async function loadShop() {
       setLoading(true)
       setError('')
+      setShop(null)
+      setBalance(null)
+      setRewards([])
 
       try {
         const { data: shopData, error: shopError } =
           await supabase
             .from('shops')
-            .select('id, name, description, address')
+            .select(cafeColumns)
             .eq('qr_code', shopSlug)
             .maybeSingle()
 
@@ -64,8 +64,13 @@ export default function ShopVisit({
 
         if (loyaltyError) throw loyaltyError
 
+        const { data: offers, error: rewardError } = await supabase.from('rewards')
+          .select('id, shop_id, title, required_stamps, is_active').eq('shop_id', shopData.id).eq('is_active', true)
+        if (rewardError) throw rewardError
+
         if (active) {
           setBalance(loyalty)
+          setRewards((offers ?? []) as Reward[])
         }
       } catch (err: unknown) {
         if (active) {
@@ -112,36 +117,7 @@ export default function ShopVisit({
             <p>{shop.description}</p>
           )}
 
-          <div className="wallet-cafe">
-            <h3>Your Loyalty Card</h3>
-
-            <p className="wallet-count">
-              {balance?.stamps ?? 0} Digital Stamp(s)
-            </p>
-
-            <div className="wallet-grid">
-              {Array.from({ length: 10 }, (_, index) => (
-                <div
-                  key={index}
-                  className={
-                    index < Math.min(balance?.stamps ?? 0, 10)
-                      ? 'wallet-stamp filled'
-                      : 'wallet-stamp'
-                  }
-                  role="img"
-                  aria-label={index < Math.min(balance?.stamps ?? 0, 10) ? 'Earned stamp' : 'Empty stamp'}
-                >
-                  {index < Math.min(balance?.stamps ?? 0, 10)
-                    ? <StampIcon kind="check" />
-                    : index === 9 ? <StampIcon kind="star" /> : null}
-                </div>
-              ))}
-            </div>
-
-            <p className="wallet-points">
-              Points: {balance?.points ?? 0}
-            </p>
-          </div>
+          <LoyaltyCard cafe={shop} stamps={balance?.stamps ?? 0} points={balance?.points ?? 0} rewards={rewards} />
 
           <p className="shop-instruction">
             Show your purchase to the cashier.

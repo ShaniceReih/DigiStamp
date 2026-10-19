@@ -154,18 +154,17 @@ const shopSlug = new URLSearchParams(
       <main className="page">
         <section className="auth-card dashboard">
           <header className="dashboard-header">
-            <div className="brand-icon"><StampIcon /></div>
-            <h1>Welcome to DigiStamp!</h1>
-            <p className="tagline">Scan. Play. Earn. Return.</p>
+            <div className="app-brand"><span className="app-emblem"><StampIcon /></span><div><h1 className="wordmark">DigiStamp</h1><p className="tagline">Scan. Play. Earn. Return.</p></div></div>
+            <span className="user-avatar" aria-label="Your account">{String(user.user_metadata?.full_name || user.email || 'D').slice(0, 1).toUpperCase()}</span>
           </header>
           <div className="welcome-box">
             {shopSlug ? (
               <ShopVisit userId={user.id} shopSlug={shopSlug} />
             ) : (
-              <DigiStampHome userId={user.id} />
+              <DigiStampHome key={user.id} userId={user.id} userName={String(user.user_metadata?.full_name || '')} email={user.email ?? ''} onSignOut={handleLogout} signingOut={loading} />
             )}
-            <div className="account-details">
-              <p>You're successfully logged in.</p>
+            <div className="account-details app-account-footer">
+              <p>Signed in as</p>
               <strong>
                 {user.user_metadata?.full_name || user.email}
               </strong>
@@ -178,7 +177,7 @@ const shopSlug = new URLSearchParams(
             </p>
           )}
           <button
-            className="text-button sign-out"
+            className="text-button sign-out app-account-footer"
             onClick={handleLogout}
             disabled={loading}
           >
