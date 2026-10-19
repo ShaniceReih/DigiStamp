@@ -2,6 +2,12 @@
 
 Release versions use semantic versioning. Dates use Asia/Manila time.
 
+## [0.2.1] - 2026-10-19
+
+### QR Scan Confirmation
+
+- Show a brief successful-scan confirmation before moving to receipt entry, while stopping camera capture immediately. Cancel the delayed handoff if the scanner is closed or navigated away from.
+
 ## [0.2.0] - 2026-10-19
 
 ### Customer QR & Cashier Scanning

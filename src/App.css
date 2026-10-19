@@ -213,6 +213,8 @@ input[type="color"] { padding: 5px; cursor: pointer; }
 .scanner-heading h3 { margin: 0; font-size: 15px; }
 .scanner-heading button { flex-shrink: 0; font-size: 11px; }
 .customer-scanner video { display: block; width: 100%; aspect-ratio: 1; border-radius: 10px; background: var(--brown); object-fit: cover; }
+.scan-confirmation { display: grid; place-items: center; min-height: 160px; border-radius: 10px; color: var(--success); background: var(--success-surface); }
+.scan-confirmation svg { width: 64px; height: 64px; }
 .cafe-card { color: var(--cafe-ink); background: var(--cafe-paper); border-color: var(--cafe-brand); }
 .cafe-card h3, .cafe-card .wallet-points, .cafe-card .reward-detail, .cafe-card .reward-list { color: var(--cafe-ink); }
 .cafe-card .wallet-count, .cafe-card .wallet-stamp { color: var(--cafe-brand); border-color: var(--cafe-brand); }
