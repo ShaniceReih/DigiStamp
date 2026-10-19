@@ -206,6 +206,43 @@ input[type="color"] { padding: 5px; cursor: pointer; }
 .reward-editor { padding-block: 24px; border-top: 1px dashed var(--olive); }
 .customer-pass code { display: block; margin: 12px 0; overflow-wrap: anywhere; color: var(--brown); font-size: 12px; }
 .customer-pass .short-customer-code { font-family: 'Manrope', sans-serif; font-size: 24px; font-weight: 800; letter-spacing: .06em; font-variant-numeric: tabular-nums; }
+.customer-username { font-size: 19px; color: var(--brown); font-weight: 750; overflow-wrap: anywhere; }
+.user-avatar { cursor: pointer; font-family: inherit; }
+.user-avatar:hover { background: var(--cream); }
+.field-feedback { font-size: 11px; font-weight: 500; color: var(--muted); line-height: 1.65; }
+.field-invalid { color: var(--error); }
+.account-settings { text-align: left; }
+.account-settings > form { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--line); }
+.account-status { display: flex; flex-direction: column; gap: 12px; margin: 24px 0; padding: 18px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); font-size: 12px; }
+.account-status > div { display: flex; flex-wrap: wrap; gap: 8px; }
+.role-badge { padding: 6px 10px; border: 1px solid var(--olive); border-radius: 20px; color: var(--brown); font-size: 11px; font-weight: 700; }
+.danger-zone p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.75; }
+.danger-zone legend { color: var(--error); }
+.danger-button { min-height: 48px; padding: 12px 16px; border: 1px solid var(--error); border-radius: 10px; color: var(--error); background: var(--error-surface); font: inherit; font-size: 12px; font-weight: 750; cursor: pointer; }
+.danger-button:hover:not(:disabled) { color: white; background: var(--error); }
+.dashboard:has(.account-settings) .app-account-footer, .dashboard:has(.admin-panel) .app-account-footer { display: none; }
+.admin-panel { text-align: left; }
+.admin-filters { display: grid; gap: 16px; margin-bottom: 20px; }
+.admin-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.admin-records { border-block: 1px solid var(--line); }
+.admin-records article { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--line); font-size: 12px; }
+.admin-records article > div { min-width: 0; overflow-wrap: anywhere; }
+.admin-records article strong, .admin-records article small { display: block; }
+.admin-records article small { margin-top: 5px; color: var(--muted); font-size: 10px; }
+.admin-records article button { flex-shrink: 0; font-size: 11px; }
+.admin-pagination { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 24px 0; font-size: 12px; }
+.admin-editor { display: flex; flex-direction: column; gap: 18px; margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--olive); }
+.admin-editor summary { min-height: 44px; padding-block: 12px; font-size: 13px; cursor: pointer; }
+.admin-editor pre { max-height: 320px; overflow: auto; padding: 16px; border-radius: 10px; color: var(--ink); background: var(--paper); font-size: 11px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.admin-account-actions { display: flex; flex-direction: column; gap: 16px; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--line); }
+textarea { width: 100%; min-height: 96px; padding: 12px; border: 1px solid #b9ae9e; border-radius: 10px; color: var(--ink); background: var(--surface); font: inherit; font-size: 14px; resize: vertical; }
+@media(min-width:900px) {
+  .dashboard:has(.admin-panel) { max-width: 1000px; }
+  .admin-filters { grid-template-columns: repeat(3,minmax(0,1fr)); }
+  .admin-editor form { max-width: 600px; }
+  .admin-account-actions { max-width: 600px; }
+  .dashboard:has(.account-settings) { max-width: 560px; }
+}
 .customer-qr { margin-block: 22px; }
 .scan-customer-button { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-bottom: 20px; }
 .scan-customer-button svg { width: 22px; height: 22px; }

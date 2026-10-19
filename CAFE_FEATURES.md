@@ -7,7 +7,9 @@ This version adds café-specific branding and rewards, an owner workspace, a bas
 1. Ensure migrations 001–004 are already applied to the target Supabase project.
 2. Apply `supabase/migrations/005_cafe_customization.sql` using the project's normal migration process or Supabase SQL Editor. Back up production before applying migrations.
 3. Apply `supabase/migrations/006_customer_codes.sql` for short customer IDs and code-based checkout. It reuses an existing text `customer_code` and its default generator when present, preserving assigned IDs. Otherwise it creates an identity-backed code generator. Missing codes are filled using the configured generator; duplicates or incompatible formats stop the migration rather than silently renumbering customers. The migration may be rerun. UUIDs and related balances remain unchanged. Public IDs have at least six digits (`DS-000001`); gaps are possible. Clients may update their profile name but not their code. Old UUID QRs remain supported. A customer code is an identifier, not a password.
-4. Deploy the app with the existing `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` values. The current app requires migrations 005 and 006; do not deploy it against the old schema.
+4. For the current app, also complete the migration 007 and `account-management` Edge Function setup in `ACCOUNTS_ADMIN.md`. Then deploy with the existing `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` values. Do not deploy against an older schema.
+
+For the username/settings/admin update, also apply migration 007 and deploy the `account-management` Edge Function before deploying its frontend. See `ACCOUNTS_ADMIN.md` for complete deployment, first-admin setup, deletion behavior, and verification.
 
 No live migration is applied by building or previewing the app. No café, staff, reward, logo, or customer sample records are seeded by migration 005.
 

@@ -21,6 +21,7 @@ Use self-hosted Manrope for app text and controls, and Fraunces for the DigiStam
 - The proposal's customer reference informs the compact brand header, prominent collection panel, separate reward tickets, and bottom navigation (Home, Rewards, Play, Account). Do not pool stamps or imply cross-café rewards. Play and merchant Reports are explicitly marked coming soon; never populate them with invented analytics, prizes, or activated subscription benefits.
 - The desktop merchant reference informs sidebar navigation and a side-by-side branding form/card preview. Retain the earth-tone brand instead of copying the reference's purple palette. Mobile merchant navigation wraps into touch-friendly buttons.
 - Customer Account includes a dark-on-white personal QR with a quiet zone and manual ID fallback. Home offers a My QR code shortcut. Checkout opens the camera only on request, reports permission failures, and retains explicit purchase/receipt verification after scanning.
+- The profile avatar is a button opening Account settings. Keep profile and email forms separate, show actual role badges, and separate permanent deletion with explicit typed confirmation. Username availability feedback is readable and announced to assistive technology. Developer administration uses searchable, paginated records with audit reasons and restricted edit forms, expanding on desktop while remaining usable on mobile.
 
 ## Validation
 

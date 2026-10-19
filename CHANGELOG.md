@@ -2,6 +2,16 @@
 
 Release versions use semantic versioning. Dates use Asia/Manila time.
 
+## [0.4.0] - 2026-10-19
+
+### Usernames, Account Settings, and Developer Administration
+
+- Add globally unique, case-insensitive usernames with signup availability feedback and editable defaults for existing accounts.
+- Let cashiers award verified purchase stamps using usernames as well as customer IDs and QRs.
+- Add account settings for names, usernames, email changes, role badges, and confirmed account deletion.
+- Add protected developer administration for users, cafés, staff, rewards, balances, transactions, feature access, and audit history; require reasons for admin edits.
+- Add migration 007, account-management Edge Function, role/username/account-deletion tests, and deployment instructions in ACCOUNTS_ADMIN.md. These must be deployed before the frontend; live Auth/email behavior still requires staging verification.
+
 ## [0.3.2] - 2026-10-19
 
 ### Stamp Collection Design
