@@ -6,6 +6,7 @@ import { supabase } from './lib/supabase'
 import './App.css'
 import DigiStampHome from './DigiStampHome'
 import ShopVisit from './ShopVisit'
+import WelcomeScreen from './WelcomeScreen'
 
 
 
@@ -13,6 +14,7 @@ type Mode = 'login' | 'signup'
 
 function App() {
   const [mode, setMode] = useState<Mode>('signup')
+  const [showWelcome, setShowWelcome] = useState(true)
   const [user, setUser] = useState<User | null>(null)
   const [checking, setChecking] = useState(true)
   const [loading, setLoading] = useState(false)
@@ -185,9 +187,21 @@ const shopSlug = new URLSearchParams(
     )
   }
 
+  if (showWelcome) {
+    return (
+      <WelcomeScreen
+        onSignIn={() => { switchMode('login'); setShowWelcome(false) }}
+        onSignUp={() => { switchMode('signup'); setShowWelcome(false) }}
+      />
+    )
+  }
+
   return (
     <main className="page">
       <section className="auth-card">
+        <button type="button" className="text-button welcome-back" onClick={() => setShowWelcome(true)}>
+          &larr; Back to welcome
+        </button>
         <header className="auth-header">
           <div className="brand-icon">D</div>
           <h1>DigiStamp</h1>
