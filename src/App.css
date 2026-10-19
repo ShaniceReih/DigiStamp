@@ -361,39 +361,5 @@ input:focus {
   font-size: 13px;
 }
 
-/* Public welcome screen */
-.welcome-page {
-  min-height: 100vh;
-  min-height: 100svh;
-  display: flex;
-  justify-content: center;
-  background: radial-gradient(ellipse at 50% 25%, #ede2ff 0%, transparent 65%), #f8f6ff;
-  padding: 24px;
-}
-.welcome-screen { width: 100%; max-width: 440px; display: flex; flex-direction: column; min-height: calc(100svh - 48px); }
-.welcome-brand { display: flex; align-items: center; justify-content: center; gap: 9px; color: #5524a6; font-size: 18px; font-weight: 800; padding: 12px 0; }
-.welcome-brand-dot { width: 12px; height: 12px; border: 3px solid #7139ce; border-radius: 4px; transform: rotate(-12deg); }
-.welcome-content { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 0; text-align: center; }
-.welcome-logo { display: grid; place-items: center; width: 104px; height: 104px; margin-bottom: 28px; border-radius: 30px; color: white; background: linear-gradient(145deg, #9b65ec, #6025bc); box-shadow: 0 16px 36px #7139ce30, inset 0 1px 0 #ffffff55; transform: rotate(-6deg); }
-.welcome-logo svg { width: 80px; height: 80px; }
-.welcome-eyebrow { color: #7139ce; font-size: 11px; font-weight: 750; letter-spacing: 1.4px; text-transform: uppercase; margin: 0 0 14px; }
-.welcome-content h1 { color: #302044; font-size: clamp(29px, 7.5vw, 36px); line-height: 1.18; letter-spacing: -1.1px; }
-.welcome-description { max-width: 325px; margin: 18px 0 28px; color: #746580; font-size: 14px; line-height: 1.75; }
-.welcome-stamp-card { width: 100%; max-width: 320px; padding: 20px; background: #ffffffd9; border: 1px solid #e7dcf6; border-radius: 20px; box-shadow: 0 12px 30px #5524a60a; transform: rotate(-3deg); }
-.welcome-card-heading { display: flex; justify-content: space-between; gap: 8px; color: #554066; font-size: 11px; font-weight: 700; }
-.welcome-card-heading span:last-child { color: #897794; font-weight: 500; }
-.welcome-stamps { display: flex; gap: 10px; margin: 18px 0 14px; }
-.welcome-stamps span { flex: 1; aspect-ratio: 1; display: grid; place-items: center; border: 1.5px dashed #d6c3ee; border-radius: 50%; color: #ad8fce; font-size: 23px; }
-.welcome-stamps .is-collected { background: #ede3fc; border: 1.5px solid #ede3fc; color: #7139ce; }
-.welcome-stamp-card p { margin: 0; color: #897794; font-size: 11px; }
-.welcome-tagline { margin: 26px 0 0; color: #8867b5; font-size: 12px; letter-spacing: .6px; }
-.welcome-actions { padding: 8px 0 max(12px, env(safe-area-inset-bottom)); }
-.welcome-actions .primary-button { display: flex; justify-content: center; align-items: center; gap: 14px; min-height: 54px; border-radius: 16px; }
-.welcome-actions .switch-text { margin: 18px 0 0; line-height: 1.7; }
 .welcome-back { display: block; margin: 0 0 24px; font-size: 13px; }
 button:focus-visible { outline: 3px solid #a882e5; outline-offset: 4px; }
-@media (max-width: 360px) {
-  .welcome-page { padding: 16px; }
-  .welcome-screen { min-height: calc(100svh - 32px); }
-  .welcome-stamps { gap: 7px; }
-}
