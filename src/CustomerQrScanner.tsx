@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { parseCustomerQr } from './lib/customerQr'
+import StampIcon from './StampIcon'
 
 type Props = { onDetected: (customerId: string) => void; onClose: () => void }
 
@@ -8,6 +9,7 @@ export default function CustomerQrScanner({ onDetected, onClose }: Props) {
   const [status, setStatus] = useState('Starting camera…')
   const [error, setError] = useState('')
   const [attempt, setAttempt] = useState(0)
+  const [confirmed, setConfirmed] = useState(false)
   const handlers = useRef({ onDetected, onClose })
   useEffect(() => { handlers.current = { onDetected, onClose } }, [onDetected, onClose])
 
@@ -16,6 +18,7 @@ export default function CustomerQrScanner({ onDetected, onClose }: Props) {
     let stream: MediaStream | null = null
     let frame = 0
     let lastScan = 0
+    let confirmationTimer: number | undefined
     function stop() {
       cancelAnimationFrame(frame)
       stream?.getTracks().forEach(track => track.stop())
@@ -54,7 +57,14 @@ export default function CustomerQrScanner({ onDetected, onClose }: Props) {
               const result = jsQR(pixels.data, pixels.width, pixels.height)
               if (result) {
                 const customerId = parseCustomerQr(result.data)
-                if (customerId) { disposed = true; stop(); handlers.current.onDetected(customerId); return }
+                if (customerId) {
+                  disposed = true
+                  stop()
+                  setConfirmed(true)
+                  setStatus('Customer QR scanned. Moving to receipt details…')
+                  confirmationTimer = window.setTimeout(() => handlers.current.onDetected(customerId), 1200)
+                  return
+                }
                 setStatus('This is not a customer DigiStamp QR code. Ask the customer to open Account → Your customer QR.')
               }
             }
@@ -76,13 +86,14 @@ export default function CustomerQrScanner({ onDetected, onClose }: Props) {
       }
     }
     void start()
-    return () => { disposed = true; stop(); document.removeEventListener('visibilitychange', visibilityChanged) }
+    return () => { disposed = true; stop(); window.clearTimeout(confirmationTimer); document.removeEventListener('visibilitychange', visibilityChanged) }
   }, [attempt])
 
   return <section className="customer-scanner" aria-label="Customer QR scanner">
     <div className="scanner-heading"><h3>Scan customer QR</h3><button type="button" className="text-button" onClick={onClose}>Close camera</button></div>
-    {!error && <video ref={videoRef} autoPlay muted playsInline aria-label="Live camera preview" />}
-    <p role="status" className={error ? 'error' : 'wallet-note'}>{error || status}</p>
+    {!error && !confirmed && <video ref={videoRef} autoPlay muted playsInline aria-label="Live camera preview" />}
+    {confirmed && <div className="scan-confirmation" aria-hidden="true"><StampIcon kind="check" /></div>}
+    <p role="status" className={error ? 'error' : confirmed ? 'success' : 'wallet-note'}>{error || status}</p>
     {error && <button type="button" className="wallet-refresh" onClick={() => { setError(''); setStatus('Starting camera…'); setAttempt(value => value + 1) }}>Retry camera</button>}
     <p className="wallet-note">Scanning fills the customer ID only. Verify the purchase and receipt before awarding a stamp.</p>
   </section>
