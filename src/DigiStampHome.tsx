@@ -96,11 +96,19 @@ export default function DigiStampHome({ userId }: Props) {
   }
 
   // Staff interface
-  if (role === 'staff') {
+ if (role === 'staff') {
   return (
     <>
       <ShopQRCode userId={userId} />
-      <CashierTest />
+
+      {import.meta.env.DEV ? (
+        <CashierTest />
+      ) : (
+        <p className="wallet-note">
+          Merchant transaction tools are currently
+          available only in the development environment.
+        </p>
+      )}
     </>
   )
 }
