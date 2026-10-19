@@ -2,6 +2,12 @@
 
 Release versions use semantic versioning. Dates use Asia/Manila time.
 
+## [0.3.1] - 2026-10-19
+
+### Earned Stamp Visibility
+
+- Show earned stamp icons even when a café has no published reward. Only configured rewards show empty target slots; large balances retain their full count with up to 20 icons displayed.
+
 ## [0.3.0] - 2026-10-19
 
 ### Short Customer IDs
