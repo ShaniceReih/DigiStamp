@@ -1,197 +1,124 @@
-
 import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase'
-import CashierTest from './CashierTest'
-import ShopQRCode from './ShopQRCode'
+import { cafeColumns, cafeStyle, errorText } from './lib/loyalty'
+import type { Cafe, Reward } from './lib/loyalty'
 import StampIcon from './StampIcon'
+import LoyaltyCard from './LoyaltyCard'
+import MerchantHome from './MerchantHome'
 
-type RoleStatus = 'loading' | 'staff' | 'customer' | 'error'
+type Membership = { shop_id: string; role: 'owner' | 'cashier' }
+type WalletRow = { shop_id: string; stamps: number; points: number }
 
-type WalletRow = {
-  shop_id: string
-  stamps: number
-  points: number
-  shops: { name: string } | { name: string }[] | null
-}
+type Props = { userId: string; userName: string; email: string; onSignOut: () => void; signingOut: boolean }
 
-type Props = {
-  userId: string
-}
-
-export default function DigiStampHome({ userId }: Props) {
-  const [role, setRole] = useState<RoleStatus>('loading')
+export default function DigiStampHome({ userId, userName, email, onSignOut, signingOut }: Props) {
+  const [memberships, setMemberships] = useState<Membership[]>([])
   const [wallet, setWallet] = useState<WalletRow[]>([])
+  const [shops, setShops] = useState<Cafe[]>([])
+  const [rewards, setRewards] = useState<Reward[]>([])
+  const [checking, setChecking] = useState(true)
+  const [roleError, setRoleError] = useState('')
+  const [roleAttempt, setRoleAttempt] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [refresh, setRefresh] = useState(0)
+  const [view, setView] = useState<'wallet' | 'merchant'>('merchant')
+  const [copied, setCopied] = useState(false)
+  const [customerTab, setCustomerTab] = useState<'wallet' | 'rewards' | 'play' | 'account'>('wallet')
 
-  // Determine whether the signed-in user is staff
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+  }, [customerTab])
+
   useEffect(() => {
     let active = true
+    Promise.resolve(supabase.from('shop_staff').select('shop_id, role').eq('user_id', userId).in('role', ['owner', 'cashier']))
+      .then(({ data, error }) => {
+        if (!active) return
+        if (error) setRoleError(error.message)
+        else setMemberships((data ?? []) as Membership[])
+        setChecking(false)
+      }).catch(error => { if (active) { setRoleError(errorText(error)); setChecking(false) } })
+    return () => { active = false }
+  }, [userId, roleAttempt])
 
-    async function checkRole() {
-      setRole('loading')
-
-      const { data, error } = await supabase
-        .from('shop_staff')
-        .select('role')
-        .eq('user_id', userId)
-        .in('role', ['owner', 'cashier'])
-        .limit(1)
-
-      if (!active) return
-
-      if (error) {
-        setRole('error')
-      } else {
-        setRole(data && data.length > 0 ? 'staff' : 'customer')
-      }
-    }
-
-    void checkRole()
-
-    return () => {
-      active = false
-    }
-  }, [userId])
-
-  // Load the customer's real Supabase balances
   useEffect(() => {
-    if (role !== 'customer') return
-
+    if (checking || roleError || (memberships.length > 0 && view === 'merchant')) return
     let active = true
-
-    async function loadWallet() {
-      setLoading(true)
-      setError('')
-
-      const { data, error } = await supabase
-        .from('loyalty_accounts')
-        .select('shop_id, stamps, points, shops(name)')
-        .eq('customer_id', userId)
-
-      if (!active) return
-
-      if (error) {
-        setError(error.message)
-      } else {
-        setWallet((data ?? []) as unknown as WalletRow[])
-      }
-
-      setLoading(false)
+    async function load() {
+      try {
+        const { data, error } = await supabase.from('loyalty_accounts').select('shop_id, stamps, points').eq('customer_id', userId)
+        if (error) throw error
+        const accounts = (data ?? []) as WalletRow[]
+        let cafes: Cafe[] = []
+        let offers: Reward[] = []
+        if (accounts.length) {
+          const ids = accounts.map(account => account.shop_id)
+          const results = await Promise.all([
+            supabase.from('shops').select(cafeColumns).in('id', ids),
+            supabase.from('rewards').select('id, shop_id, title, required_stamps, is_active').in('shop_id', ids).eq('is_active', true),
+          ])
+          for (const result of results) if (result.error) throw result.error
+          cafes = (results[0].data ?? []) as Cafe[]
+          offers = (results[1].data ?? []) as Reward[]
+        }
+        if (active) { setWallet(accounts); setShops(cafes); setRewards(offers) }
+      } catch (error) { if (active) setError(errorText(error)) }
+      finally { if (active) setLoading(false) }
     }
+    void load()
+    return () => { active = false }
+  }, [checking, roleError, memberships, view, userId, refresh])
 
-    void loadWallet()
-
-    return () => {
-      active = false
-    }
-  }, [role, userId, refresh])
-
-  if (role === 'loading') {
-    return <p className="loading-state" role="status">Checking DigiStamp account...</p>
-  }
-
-  if (role === 'error') {
-    return <p className="error">Unable to verify account permissions.</p>
-  }
-
-  // Staff interface
- if (role === 'staff') {
-  return (
-    <>
-      <ShopQRCode userId={userId} />
-
-      {import.meta.env.DEV ? (
-        <CashierTest />
-      ) : (
-        <p className="wallet-note">
-          Merchant transaction tools are currently
-          available only in the development environment.
-        </p>
-      )}
-    </>
-  )
-}
-
-  // Customer interface
-  return (
-    <section className="wallet">
-      <div className="wallet-header">
-        <h2>My Digital Stamps</h2>
-        <button
-          type="button"
-          className="wallet-refresh"
-          onClick={() => setRefresh(value => value + 1)}
-        >
-          Refresh
-        </button>
-      </div>
-
-      {loading && <p className="loading-state" role="status">Loading your stamps...</p>}
-
-      {error && (
-        <p className="error">Unable to load wallet: {error}</p>
-      )}
-
-      {!loading && !error && wallet.length === 0 && (
-        <div className="wallet-cafe wallet-empty">
-          <StampIcon />
-          <h3>No stamps yet!</h3>
-          <p>Visit a participating cafe to start earning rewards.</p>
-        </div>
-      )}
-
+  if (checking) return <p className="loading-state" role="status">Checking DigiStamp account…</p>
+  if (roleError) return <><p role="alert" className="error">Unable to verify your café permissions: {roleError}</p><button type="button" className="wallet-refresh" onClick={() => { setChecking(true); setRoleError(''); setRoleAttempt(value => value + 1) }}>Try again</button></>
+  return <>
+    {memberships.length > 0 && <nav className="workspace-nav" aria-label="Account view">
+      <button type="button" aria-pressed={view === 'merchant'} onClick={() => setView('merchant')}>Café workspace</button>
+      <button type="button" aria-pressed={view === 'wallet'} onClick={() => { setLoading(true); setError(''); setView('wallet') }}>My wallet</button>
+    </nav>}
+    {memberships.length > 0 && view === 'merchant' ? <MerchantHome memberships={memberships} /> : <section className="customer-shell">
+      <header className="customer-greeting"><p>Hello{userName ? `, ${userName.split(' ')[0]}` : ' there'}.</p><h2>{customerTab === 'wallet' ? 'Make every visit count.' : customerTab === 'rewards' ? 'A little something to return for.' : customerTab === 'play' ? 'A little play. A little reward.' : 'Your DigiStamp account.'}</h2></header>
+      {customerTab === 'wallet' && <>
+      <section className="collection-banner" aria-label="Your café collection"><div><h3>Your café collection</h3><p>{loading ? 'Finding your cards…' : `${wallet.length} ${wallet.length === 1 ? 'café card' : 'café cards'}, all in one place.`}</p></div><span className="collection-art" aria-hidden="true"><StampIcon /></span>
+        <div className="collection-actions"><button type="button" onClick={() => setCustomerTab('rewards')}><StampIcon kind="gift" />My rewards</button><button type="button" onClick={() => setCustomerTab('account')}><StampIcon kind="user" />Customer ID</button></div>
+      </section>
+      <section className="wallet">
+      <div className="wallet-header"><h2>My Digital Stamps</h2><button type="button" className="wallet-refresh" disabled={loading} onClick={() => { setLoading(true); setError(''); setRefresh(value => value + 1) }}>Refresh</button></div>
+      {loading && <p className="loading-state" role="status">Loading your stamps…</p>}
+      {error && <p role="alert" className="error">Unable to load wallet: {error}</p>}
+      {!loading && !error && !wallet.length && <div className="wallet-cafe wallet-empty"><StampIcon /><h3>No stamps yet!</h3><p>Visit a participating café to start earning rewards.</p></div>}
       {!loading && !error && wallet.map(account => {
-        const shopName = Array.isArray(account.shops)
-          ? account.shops[0]?.name
-          : account.shops?.name
-
-        return (
-          <div className="wallet-cafe" key={account.shop_id}>
-            <h3>{shopName ?? 'Participating Cafe'}</h3>
-
-            <p className="wallet-count">
-              {account.stamps} Digital Stamp(s)
-            </p>
-
-            <div className="wallet-grid">
-              {Array.from({ length: 10 }, (_, index) => (
-                <div
-                  key={index}
-                  className={
-                    index < Math.min(account.stamps, 10)
-                      ? 'wallet-stamp filled'
-                      : 'wallet-stamp'
-                  }
-                  aria-label={
-                    index < Math.min(account.stamps, 10)
-                      ? 'Earned stamp'
-                      : 'Empty stamp'
-                  }
-                  role="img"
-                >
-                  {index < Math.min(account.stamps, 10)
-                    ? <StampIcon kind="check" />
-                    : index === 9 ? <StampIcon kind="star" /> : null}
-                </div>
-              ))}
-            </div>
-
-            <p className="wallet-points">
-              Points: {account.points}
-            </p>
-
-            <small>10-stamp display is a demo milestone.</small>
-          </div>
-        )
+        const cafe = shops.find(shop => shop.id === account.shop_id)
+        return cafe ? <LoyaltyCard key={account.shop_id} cafe={cafe} stamps={account.stamps} points={account.points} rewards={rewards.filter(reward => reward.shop_id === account.shop_id)} /> : <p key={account.shop_id} className="status-message">Café details are unavailable. Your balance is {account.stamps} stamps.</p>
       })}
-
-      <p className="wallet-note">
-        Stamps are credited after an authorized cashier
-        verifies your purchase. Reward redemption is
-        coming soon!
-      </p>
-    </section>
-  )
+      <p className="wallet-note">Each café has its own stamps and rewards. A cashier verifies purchases before awarding stamps. Reward redemption is coming soon.</p>
+      </section></>}
+      {customerTab === 'rewards' && <section className="customer-rewards"><div className="wallet-header"><h2>Rewards at your cafés</h2></div><p className="subtitle">Your stamp balance stays separate at each café.</p>
+        {loading && <p className="loading-state" role="status">Loading rewards…</p>}
+        {!loading && !error && !rewards.length && <div className="wallet-empty"><StampIcon kind="gift" /><h3>No rewards published yet</h3><p>Rewards from your cafés will appear here when available.</p></div>}
+        {error && <p className="error" role="alert">{error}</p>}
+        {rewards.filter(reward => reward.is_active).map(reward => {
+          const cafe = shops.find(shop => shop.id === reward.shop_id)
+          const balance = wallet.find(account => account.shop_id === reward.shop_id)?.stamps ?? 0
+          return cafe && <article key={reward.id} className="reward-ticket" style={cafeStyle(cafe)}><span className="reward-ticket-icon"><StampIcon kind="gift" /></span><div><p>{cafe.name}</p><h3>{reward.title}</h3><span>{balance} / {reward.required_stamps} stamps · {balance >= reward.required_stamps ? 'Target reached' : `${reward.required_stamps - balance} to go`}</span>{cafe.qr_code && <a href={`/?shop=${encodeURIComponent(cafe.qr_code)}`}>View café card →</a>}</div></article>
+        })}
+        <p className="wallet-note">Reward redemption is coming soon. Reaching a target does not redeem a reward automatically.</p>
+      </section>}
+      {customerTab === 'play' && <section className="play-preview"><span className="play-illustration" aria-hidden="true"><StampIcon kind="play" /></span><span className="coming-soon">Coming soon</span><h2>A small moment of fun.</h2><p>Quick café games are on the way. Games and their rewards will become available after a cashier verifies an eligible purchase.</p><p className="wallet-note">No games or prizes are available yet.</p><button className="primary-button" type="button" onClick={() => setCustomerTab('wallet')}>Back to my stamps</button></section>}
+      {customerTab === 'account' && <section className="customer-account"><h2>Account</h2><p className="profile-name">{userName || 'DigiStamp member'}</p><p className="subtitle">{email}</p>
+      <section className="customer-pass"><h3>Your customer ID</h3><p className="wallet-note">Share this with the cashier when collecting a stamp.</p><code>{userId}</code>
+        <button type="button" className="wallet-refresh" onClick={async () => { try { await navigator.clipboard.writeText(userId); setCopied(true) } catch { setCopied(false); setError('Could not copy. Select your customer ID to copy it manually.') } }}>{copied ? 'Customer ID copied' : 'Copy customer ID'}</button>
+      </section>
+      {error && <p className="error" role="status">{error}</p>}
+      <button type="button" className="text-button sign-out" onClick={onSignOut} disabled={signingOut}>{signingOut ? 'Signing out…' : 'Sign Out'}</button>
+      </section>}
+      <nav className="customer-nav" aria-label="Customer navigation">
+        <button type="button" aria-current={customerTab === 'wallet' ? 'page' : undefined} onClick={() => setCustomerTab('wallet')}><StampIcon kind="home" />Home</button>
+        <button type="button" aria-current={customerTab === 'rewards' ? 'page' : undefined} onClick={() => setCustomerTab('rewards')}><StampIcon kind="gift" />Rewards</button>
+        <button type="button" aria-current={customerTab === 'play' ? 'page' : undefined} onClick={() => setCustomerTab('play')}><StampIcon kind="play" />Play</button>
+        <button type="button" aria-current={customerTab === 'account' ? 'page' : undefined} onClick={() => setCustomerTab('account')}><StampIcon kind="user" />Account</button>
+      </nav>
+    </section>}
+  </>
 }

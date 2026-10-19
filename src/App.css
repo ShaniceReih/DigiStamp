@@ -110,9 +110,13 @@ button:disabled { opacity: .6; cursor: not-allowed; }
 .loading-state { color: var(--muted); font-size: 13px; }
 
 .dashboard { text-align: center; }
-.dashboard-header { padding-bottom: 28px; border-bottom: 1px solid var(--line); }
-.dashboard-header h1 { max-width: 16ch; margin: 0 auto; font-size: 23px; }
-.dashboard-header .tagline { margin-top: 10px; }
+.dashboard-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 22px; border-bottom: 1px solid var(--line); text-align: left; }
+.dashboard-header h1 { margin: 0; font-size: 25px; }
+.dashboard-header .tagline { margin-top: 4px; font-size: 10px; }
+.app-brand { display: flex; align-items: center; gap: 12px; }
+.app-emblem { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; background: var(--cream); color: var(--brown); }
+.app-emblem svg { width: 26px; height: 26px; }
+.user-avatar { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line); background: var(--paper); color: var(--brown); font-size: 14px; font-weight: 750; }
 .welcome-box { margin: 28px 0 24px; text-align: left; }
 .account-details { margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--line); text-align: left; }
 .account-details p { margin: 0 0 8px; color: var(--muted); font-size: 12px; }
@@ -183,6 +187,124 @@ button:disabled { opacity: .6; cursor: not-allowed; }
 .back-link:hover { text-decoration: underline; }
 .shop-instruction { margin: 22px 0 0; padding: 16px 0 0; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; line-height: 1.75; text-align: left; }
 .cashier-panel { margin-top: 28px; padding-top: 28px; border-top: 1px solid var(--line); text-align: left; }
+
+select { width: 100%; min-height: 48px; padding: 10px 12px; border: 1px solid #b9ae9e; border-radius: 10px; background: var(--surface); color: var(--ink); font: inherit; font-size: 14px; }
+fieldset { display: flex; flex-direction: column; gap: 18px; min-width: 0; margin: 0; padding: 0; border: 0; }
+fieldset:disabled { opacity: .65; }
+legend { margin-bottom: 16px; color: var(--brown); font-size: 16px; font-weight: 750; }
+input[type="color"] { padding: 5px; cursor: pointer; }
+.checkbox-label { flex-direction: row; align-items: center; min-height: 44px; gap: 12px; }
+.checkbox-label input { width: 22px; min-height: 22px; height: 22px; accent-color: var(--caramel); }
+.workspace-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 24px; }
+.workspace-nav button { flex: 1; min-height: 44px; padding: 10px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); color: var(--brown); font-size: 12px; font-weight: 700; cursor: pointer; }
+.workspace-nav button:hover { background: var(--paper); }
+.workspace-nav button[aria-pressed="true"] { background: var(--brown); color: white; border-color: var(--brown); }
+.merchant-home > h2 { margin-bottom: 20px; }
+.merchant-home .cashier-panel { margin-top: 0; padding-top: 0; border-top: 0; }
+.branding-preview, .reward-settings, .customer-pass { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--line); }
+.branding-preview .cafe-card { margin-top: 16px; }
+.reward-editor { padding-block: 24px; border-top: 1px dashed var(--olive); }
+.customer-pass code { display: block; margin: 12px 0; overflow-wrap: anywhere; color: var(--brown); font-size: 12px; }
+.cafe-card { color: var(--cafe-ink); background: var(--cafe-paper); border-color: var(--cafe-brand); }
+.cafe-card h3, .cafe-card .wallet-points, .cafe-card .reward-detail, .cafe-card .reward-list { color: var(--cafe-ink); }
+.cafe-card .wallet-count, .cafe-card .wallet-stamp { color: var(--cafe-brand); border-color: var(--cafe-brand); }
+.cafe-card .wallet-points { border-color: var(--cafe-brand); }
+.cafe-card .wallet-stamp.filled { border-color: var(--cafe-brand); background: transparent; }
+.cafe-identity { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.cafe-identity h3 { margin: 0; }
+.cafe-logo, .cafe-logo-placeholder { flex-shrink: 0; width: 40px; height: 40px; object-fit: contain; }
+.cafe-logo-placeholder { display: grid; place-items: center; color: var(--cafe-brand); }
+.cafe-logo-placeholder svg { width: 30px; height: 30px; }
+.reward-list { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; padding: 0; list-style: none; font-size: 12px; }
+.reward-list li { display: flex; flex-direction: column; gap: 3px; overflow-wrap: anywhere; }
+.reward-list strong { font-size: 11px; font-variant-numeric: tabular-nums; }
+.reward-detail { font-size: 12px; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* Compact customer app, inspired by the proposal's wallet and reward views. */
+.dashboard:has(.customer-shell) { padding-bottom: 0; }
+.dashboard:has(.customer-shell) .app-account-footer { display: none; }
+.customer-shell { min-width: 0; padding-bottom: 88px; }
+.customer-greeting { margin-bottom: 22px; }
+.customer-greeting > p { margin: 0 0 6px; font-size: 13px; color: var(--muted); }
+.customer-greeting h2 { max-width: 23ch; font-size: 23px; line-height: 1.35; }
+.collection-banner { position: relative; display: grid; grid-template-columns: 1fr 58px; gap: 18px 8px; margin: 0 0 30px; padding: 22px; background: var(--brown); color: #fff8ed; border-radius: 18px; overflow: hidden; }
+.collection-banner h3 { margin: 0 0 6px; color: inherit; font-size: 17px; }
+.collection-banner p { margin: 0; color: #efdbc7; font-size: 12px; }
+.collection-art { display: grid; place-items: center; align-self: center; width: 54px; height: 54px; border: 1px dashed #dbb899; border-radius: 50%; color: var(--cream); transform: rotate(-12deg); }
+.collection-art svg { width: 34px; height: 34px; }
+.collection-actions { display: flex; gap: 10px; grid-column: 1 / -1; }
+.collection-actions button { display: flex; align-items: center; justify-content: center; gap: 7px; flex: 1; min-height: 44px; padding: 8px; border: 0; border-radius: 10px; background: #fff8ed; color: var(--brown); font-size: 11px; font-weight: 750; cursor: pointer; }
+.collection-actions button:hover { background: var(--cream); }
+.collection-actions button svg { width: 17px; height: 17px; }
+.customer-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: min(calc(100% - 32px), 408px); z-index: 2; display: grid; grid-template-columns: repeat(4, 1fr); margin: 0; padding: 10px 4px max(12px, env(safe-area-inset-bottom)); border: 1px solid var(--line); border-bottom: 0; border-radius: 16px 16px 0 0; background: var(--surface); box-shadow: 0 -5px 20px #622b1406; }
+.customer-nav button { display: flex; flex-direction: column; align-items: center; gap: 5px; min-height: 48px; padding: 6px 2px; border: 0; border-radius: 9px; color: var(--muted); background: transparent; font: inherit; font-size: 10px; font-weight: 650; cursor: pointer; }
+.customer-nav button svg { width: 21px; height: 21px; }
+.customer-nav button[aria-current="page"] { color: var(--brown); background: var(--paper); }
+.customer-nav button:hover { background: var(--paper); }
+.customer-rewards, .customer-account, .play-preview { min-height: 400px; }
+.reward-ticket { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px; padding: 20px; color: var(--cafe-ink); background: var(--cafe-paper); border-radius: 14px; border: 1px solid var(--line); }
+.reward-ticket-icon { flex-shrink: 0; display: grid; place-items: center; width: 36px; height: 36px; color: var(--cafe-brand); }
+.reward-ticket-icon svg { width: 30px; height: 30px; }
+.reward-ticket p { margin: 0 0 5px; font-size: 11px; }
+.reward-ticket h3 { margin-bottom: 10px; color: inherit; }
+.reward-ticket span:not(.reward-ticket-icon) { font-size: 12px; }
+.reward-ticket a { display: block; width: fit-content; min-height: 44px; padding-top: 14px; color: inherit; font-size: 12px; font-weight: 700; }
+.coming-soon { display: inline-block; margin: 0 0 18px; padding: 6px 10px; border-radius: 20px; background: var(--cream); color: var(--brown); font-size: 11px; font-weight: 750; }
+.play-preview { padding: 24px 0; text-align: center; }
+.play-preview > p { color: var(--muted); font-size: 13px; }
+.play-illustration { display: grid; place-items: center; width: 116px; height: 116px; margin: 0 auto 24px; border: 1px dashed var(--olive); border-radius: 50%; background: var(--paper); color: var(--caramel); }
+.play-illustration svg { width: 62px; height: 62px; }
+.profile-name { margin: 24px 0 4px; color: var(--brown); font-size: 17px; font-weight: 750; }
+.customer-account > .subtitle { overflow-wrap: anywhere; }
+.customer-account .sign-out { margin-top: 28px; }
+.customer-shell .wallet-note { margin-bottom: 24px; }
+
+/* Merchant tools expand to a desktop workspace while checkout stays focused. */
+.merchant-heading { margin-bottom: 20px; }
+.merchant-heading h2 { margin-bottom: 6px; }
+.merchant-heading label { margin-top: 16px; }
+.staff-role { margin: 0; color: var(--muted); font-size: 12px; }
+.merchant-sidebar .workspace-nav { margin-top: 12px; }
+.merchant-sidebar .workspace-nav button { display: flex; align-items: center; justify-content: center; gap: 8px; }
+.merchant-sidebar .workspace-nav svg { flex-shrink: 0; width: 18px; height: 18px; }
+.nav-soon { font-size: 9px; font-weight: 500; }
+.workspace-help { display: none; }
+.workspace-context { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; color: var(--muted); font-size: 11px; }
+.access-label { padding: 5px 9px; border: 1px solid var(--line); border-radius: 20px; color: var(--brown); background: var(--paper); }
+.report-placeholder { padding: 32px 24px; border: 1px dashed var(--olive); border-radius: 16px; text-align: center; background: var(--paper); }
+.report-placeholder > svg { width: 40px; height: 40px; margin-bottom: 16px; color: var(--caramel); }
+.report-placeholder p { margin: 0 auto; max-width: 46ch; font-size: 13px; color: var(--muted); }
+
+@media (min-width: 900px) {
+  .page:has(.merchant-home) { align-items: flex-start; }
+  .dashboard:has(.merchant-home) { max-width: 1120px; min-height: calc(100svh - 64px); padding: 28px 32px; }
+  .dashboard:has(.merchant-home) .welcome-box { margin-top: 28px; }
+  .dashboard:has(.merchant-home) > .workspace-nav { max-width: 360px; }
+  .merchant-home { display: grid; grid-template-columns: 172px minmax(0, 1fr); gap: 0 32px; }
+  .merchant-heading { display: flex; align-items: center; justify-content: space-between; gap: 24px; grid-column: 1 / -1; padding-bottom: 24px; border-bottom: 1px solid var(--line); }
+  .merchant-heading .subtitle { margin-bottom: 0; }
+  .merchant-heading label { width: 250px; margin: 0; }
+  .merchant-home > .error, .merchant-home > .loading-state, .merchant-home > .status-message { grid-column: 1 / -1; }
+  .merchant-sidebar { min-width: 0; padding-top: 8px; }
+  .merchant-sidebar .workspace-nav { flex-direction: column; gap: 8px; margin-top: 20px; }
+  .merchant-sidebar .workspace-nav button { flex: auto; justify-content: flex-start; padding-inline: 14px; border-color: transparent; text-align: left; }
+  .merchant-sidebar .workspace-nav button[aria-pressed="true"] { border-color: var(--brown); }
+  .workspace-help { display: block; margin-top: 40px; padding: 18px 12px; border-top: 1px solid var(--line); color: var(--muted); }
+  .workspace-help > svg { width: 22px; height: 22px; color: var(--olive); }
+  .workspace-help p { font-size: 11px; }
+  .merchant-content { min-width: 0; padding: 8px 0 24px 28px; border-left: 1px solid var(--line); }
+  .merchant-content .cashier-panel { max-width: 470px; }
+  .merchant-content .qr-panel { max-width: 470px; }
+  .merchant-content .cafe-settings { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 28px; }
+  .cafe-settings > h2, .cafe-settings > p, .cafe-settings > .reward-settings { grid-column: 1 / -1; }
+  .cafe-settings > form { grid-column: 1; }
+  .cafe-settings > .branding-preview { grid-column: 2; grid-row: 4 / span 2; margin-top: 0; padding-top: 0; border-top: 0; }
+  .cafe-settings .reward-settings { margin-top: 32px; }
+  .reward-settings .reward-editor { max-width: 470px; }
+  .dashboard:has(.merchant-home) .account-details { padding-top: 16px; margin-top: 0; }
+  .dashboard:has(.merchant-home) .sign-out { max-width: 172px; display: flex; margin-top: 16px; }
+}
 
 @media (max-width: 599px) {
   .page { align-items: flex-start; padding: 0; background: var(--surface); }
