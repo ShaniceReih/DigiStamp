@@ -2,6 +2,12 @@
 
 Release versions use semantic versioning. Dates use Asia/Manila time.
 
+## [0.3.2] - 2026-10-19
+
+### Stamp Collection Design
+
+- Refine café stamp cards with a compact identity header, readable stamp balance and target badge, numbered empty slots, a clear next-reward summary, and café links. Preserve earned icons when no reward is configured.
+
 ## [0.3.1] - 2026-10-19
 
 ### Earned Stamp Visibility

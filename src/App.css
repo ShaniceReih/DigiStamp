@@ -221,6 +221,41 @@ input[type="color"] { padding: 5px; cursor: pointer; }
 .cafe-card .wallet-count, .cafe-card .wallet-stamp { color: var(--cafe-brand); border-color: var(--cafe-brand); }
 .cafe-card .wallet-points { border-color: var(--cafe-brand); }
 .cafe-card .wallet-stamp.filled { border-color: var(--cafe-brand); background: transparent; }
+.cafe-card { padding: 0 22px; margin-bottom: 24px; border-block: 0; border-radius: 14px; box-shadow: 0 5px 16px #622b1408; }
+.cafe-card::before, .cafe-card::after { top: 14px; bottom: 14px; }
+.cafe-card-header { padding: 22px 0 18px; border-bottom: 1px solid color-mix(in srgb, var(--cafe-ink) 15%, transparent); }
+.cafe-card-header .cafe-identity { margin: 0; gap: 12px; }
+.cafe-card-header h3 { font-size: 16px; line-height: 1.45; }
+.cafe-card-header .cafe-logo-placeholder { width: 38px; height: 38px; border: 1px solid color-mix(in srgb, var(--cafe-brand) 40%, transparent); border-radius: 50%; }
+.cafe-card-header .cafe-logo-placeholder svg { width: 23px; height: 23px; }
+.stamp-balance { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 20px; }
+.stamp-balance > p { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; margin: 0; }
+.stamp-balance strong { color: var(--cafe-brand); font-size: 30px; line-height: 1; font-weight: 800; font-variant-numeric: tabular-nums; }
+.stamp-balance p span { color: var(--cafe-ink); font-size: 11px; }
+.stamp-target { flex-shrink: 0; padding: 5px 9px; border: 1px solid color-mix(in srgb, var(--cafe-brand) 40%, transparent); border-radius: 20px; color: var(--cafe-brand); font-size: 11px; font-weight: 750; font-variant-numeric: tabular-nums; }
+.cafe-card .wallet-grid { gap: 10px; margin: 22px 0; }
+.cafe-card .wallet-stamp { border-style: dashed; border-color: color-mix(in srgb, var(--cafe-brand) 65%, transparent); }
+.cafe-card .wallet-stamp.filled { border: 3px double var(--cafe-brand); background: color-mix(in srgb, var(--cafe-brand) 7%, transparent); }
+.stamp-slot-number { color: var(--cafe-brand); font-size: 12px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.card-next-reward { display: flex; align-items: center; gap: 10px; padding: 16px 0; border-top: 1px dashed color-mix(in srgb, var(--cafe-brand) 50%, transparent); }
+.card-reward-icon { flex-shrink: 0; width: 24px; height: 24px; color: var(--cafe-brand); }
+.card-reward-icon svg { width: 24px; height: 24px; }
+.card-next-reward h4 { margin: 0 0 4px; color: var(--cafe-ink); font-size: 13px; font-weight: 750; overflow-wrap: anywhere; }
+.card-next-reward p { margin: 0; color: var(--cafe-ink); font-size: 11px; line-height: 1.6; }
+.reward-reached { display: grid; place-items: center; flex-shrink: 0; width: 24px; height: 24px; margin-left: auto; border: 1px solid var(--cafe-brand); border-radius: 50%; color: var(--cafe-brand); }
+.reward-reached svg { width: 18px; height: 18px; }
+.card-no-reward, .card-empty-stamps { padding: 0 0 16px; margin: 20px 0 0; color: var(--cafe-ink); font-size: 11px; line-height: 1.75; }
+.card-empty-stamps { padding-block: 12px; }
+.card-all-rewards { border-top: 1px dashed color-mix(in srgb, var(--cafe-brand) 50%, transparent); }
+.card-all-rewards summary { display: flex; align-items: center; min-height: 44px; color: var(--cafe-ink); font-size: 11px; cursor: pointer; }
+.card-all-rewards summary::after { content: '+'; margin-left: auto; font-size: 17px; }
+.card-all-rewards[open] summary::after { content: '−'; }
+.card-all-rewards .reward-list { margin-top: 0; }
+.cafe-card-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 56px; border-top: 1px solid color-mix(in srgb, var(--cafe-ink) 15%, transparent); }
+.cafe-card-footer p { display: flex; gap: 7px; align-items: baseline; margin: 0; color: var(--cafe-ink); font-size: 11px; }
+.cafe-card-footer strong { font-variant-numeric: tabular-nums; }
+.cafe-card-footer a { display: flex; align-items: center; justify-content: flex-end; gap: 10px; min-height: 44px; margin-left: auto; color: var(--cafe-brand); font-size: 11px; font-weight: 750; text-decoration: none; }
+.cafe-card-footer a:hover { text-decoration: underline; }
 .cafe-identity { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
 .cafe-identity h3 { margin: 0; }
 .cafe-logo, .cafe-logo-placeholder { flex-shrink: 0; width: 40px; height: 40px; object-fit: contain; }
