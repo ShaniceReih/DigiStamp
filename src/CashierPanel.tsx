@@ -4,6 +4,7 @@ import { supabase } from './lib/supabase'
 import { errorText } from './lib/loyalty'
 import CustomerQrScanner from './CustomerQrScanner'
 import StampIcon from './StampIcon'
+import { isCustomerCode } from './lib/customerQr'
 
 export default function CashierPanel({ shopId, shopName }: { shopId: string; shopName: string }) {
   const [customerId, setCustomerId] = useState('')
@@ -21,9 +22,10 @@ export default function CashierPanel({ shopId, shopName }: { shopId: string; sho
     setScanning(false)
     setMessage('')
     try {
-      const { data, error } = await supabase.rpc('award_purchase_stamp', {
-        p_shop_id: shopId, p_customer_id: customerId.trim(), p_receipt_reference: receipt.trim(),
-      })
+      const id = customerId.trim()
+      const { data, error } = isCustomerCode(id)
+        ? await supabase.rpc('award_purchase_stamp_by_code', { p_shop_id: shopId, p_customer_code: id.toUpperCase(), p_receipt_reference: receipt.trim() })
+        : await supabase.rpc('award_purchase_stamp', { p_shop_id: shopId, p_customer_id: id, p_receipt_reference: receipt.trim() })
       if (error) throw error
       if (!data?.length) throw new Error('No confirmation received. Check the receipt before retrying.')
       setFailed(false)
@@ -42,7 +44,7 @@ export default function CashierPanel({ shopId, shopName }: { shopId: string; sho
     <form onSubmit={award}>
       <fieldset disabled={saving}>
         <legend className="visually-hidden">Purchase details</legend>
-        <label>Customer ID<input value={customerId} onChange={event => { setCustomerId(event.target.value); setScanMessage('') }} required pattern="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" placeholder="Scan a customer QR or paste their ID" /></label>
+        <label>Customer ID<input value={customerId} onChange={event => { setCustomerId(event.target.value); setScanMessage('') }} autoCapitalize="characters" autoCorrect="off" spellCheck={false} required pattern="(?:[Dd][Ss]-[0-9]{6,19}|[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})" placeholder="DS-000001 or scan customer QR" /></label>
         <label>Receipt reference<input ref={receiptRef} value={receipt} onChange={event => setReceipt(event.target.value)} required minLength={4} maxLength={80} placeholder="Enter the purchase receipt number" /></label>
         <button type="submit" className="primary-button">{saving ? 'Awarding…' : 'Award 1 stamp'}</button>
       </fieldset>

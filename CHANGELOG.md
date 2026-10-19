@@ -2,6 +2,15 @@
 
 Release versions use semantic versioning. Dates use Asia/Manila time.
 
+## [0.3.0] - 2026-10-19
+
+### Short Customer IDs
+
+- Assign sequential public customer IDs such as DS-000001 while preserving internal UUIDs, balances, and staff relationships.
+- Display/copy the shorter ID and encode it in new customer QRs. Accept short IDs at checkout and continue reading existing UUID QRs.
+- Require migration 006_customer_codes.sql before deploying this change.
+- Preserve existing customer_code columns and generators; validate formats and uniqueness without renumbering existing customers. Database tests cover fresh schemas, existing generators, and migration reruns.
+
 ## [0.2.1] - 2026-10-19
 
 ### QR Scan Confirmation

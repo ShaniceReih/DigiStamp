@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { customerQrValue, parseCustomerQr } from '../src/lib/customerQr.ts'
+import { customerQrValue, isCustomerCode, parseCustomerQr } from '../src/lib/customerQr.ts'
 
 const id = '10000000-0000-0000-0000-000000000003'
 
@@ -26,4 +26,20 @@ test('invalid IDs cannot be encoded as customer cards', () => {
 test('valid mixed-case UUIDs are normalized', () => {
   const uppercase = 'ABCDEF12-1234-5678-9012-ABCDEF123456'
   assert.equal(parseCustomerQr(customerQrValue(uppercase)), uppercase.toLowerCase())
+})
+
+test('new customer codes round-trip while old UUID QRs remain readable', () => {
+  assert.equal(customerQrValue('ds-000001'), 'digistamp:customer:v2:DS-000001')
+  assert.equal(parseCustomerQr(customerQrValue('DS-000001')), 'DS-000001')
+  assert.equal(parseCustomerQr(customerQrValue('DS-1000000')), 'DS-1000000')
+  assert.equal(parseCustomerQr(`digistamp:customer:v1:${id}`), id)
+})
+
+test('short codes use zeroes and reject malformed or mismatched payloads', () => {
+  for (const code of ['DS-OOOOO1', 'DS-1', 'DS-000001/extra', 'DS-000001 OR 1=1']) {
+    assert.equal(isCustomerCode(code), false)
+    assert.equal(parseCustomerQr('digistamp:customer:v2:' + code), null)
+  }
+  assert.equal(parseCustomerQr('digistamp:customer:v1:DS-000001'), null)
+  assert.equal(parseCustomerQr('digistamp:customer:v2:' + id), null)
 })
