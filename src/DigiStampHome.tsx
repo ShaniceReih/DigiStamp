@@ -5,6 +5,8 @@ import type { Cafe, Reward } from './lib/loyalty'
 import StampIcon from './StampIcon'
 import LoyaltyCard from './LoyaltyCard'
 import MerchantHome from './MerchantHome'
+import { QRCodeSVG } from 'qrcode.react'
+import { customerQrValue } from './lib/customerQr'
 
 type Membership = { shop_id: string; role: 'owner' | 'cashier' }
 type WalletRow = { shop_id: string; stamps: number; points: number }
@@ -81,7 +83,7 @@ export default function DigiStampHome({ userId, userName, email, onSignOut, sign
       <header className="customer-greeting"><p>Hello{userName ? `, ${userName.split(' ')[0]}` : ' there'}.</p><h2>{customerTab === 'wallet' ? 'Make every visit count.' : customerTab === 'rewards' ? 'A little something to return for.' : customerTab === 'play' ? 'A little play. A little reward.' : 'Your DigiStamp account.'}</h2></header>
       {customerTab === 'wallet' && <>
       <section className="collection-banner" aria-label="Your café collection"><div><h3>Your café collection</h3><p>{loading ? 'Finding your cards…' : `${wallet.length} ${wallet.length === 1 ? 'café card' : 'café cards'}, all in one place.`}</p></div><span className="collection-art" aria-hidden="true"><StampIcon /></span>
-        <div className="collection-actions"><button type="button" onClick={() => setCustomerTab('rewards')}><StampIcon kind="gift" />My rewards</button><button type="button" onClick={() => setCustomerTab('account')}><StampIcon kind="user" />Customer ID</button></div>
+        <div className="collection-actions"><button type="button" onClick={() => setCustomerTab('rewards')}><StampIcon kind="gift" />My rewards</button><button type="button" onClick={() => setCustomerTab('account')}><StampIcon kind="qr" />My QR code</button></div>
       </section>
       <section className="wallet">
       <div className="wallet-header"><h2>My Digital Stamps</h2><button type="button" className="wallet-refresh" disabled={loading} onClick={() => { setLoading(true); setError(''); setRefresh(value => value + 1) }}>Refresh</button></div>
@@ -107,7 +109,10 @@ export default function DigiStampHome({ userId, userName, email, onSignOut, sign
       </section>}
       {customerTab === 'play' && <section className="play-preview"><span className="play-illustration" aria-hidden="true"><StampIcon kind="play" /></span><span className="coming-soon">Coming soon</span><h2>A small moment of fun.</h2><p>Quick café games are on the way. Games and their rewards will become available after a cashier verifies an eligible purchase.</p><p className="wallet-note">No games or prizes are available yet.</p><button className="primary-button" type="button" onClick={() => setCustomerTab('wallet')}>Back to my stamps</button></section>}
       {customerTab === 'account' && <section className="customer-account"><h2>Account</h2><p className="profile-name">{userName || 'DigiStamp member'}</p><p className="subtitle">{email}</p>
-      <section className="customer-pass"><h3>Your customer ID</h3><p className="wallet-note">Share this with the cashier when collecting a stamp.</p><code>{userId}</code>
+      <section className="customer-pass"><h3>Your customer QR</h3><p className="wallet-note">Show this code to the cashier to collect a stamp at any participating café.</p>
+        <div className="qr-image customer-qr"><QRCodeSVG value={customerQrValue(userId)} size={220} level="M" marginSize={4} fgColor="#622b14" bgColor="#ffffff" title="Your DigiStamp customer QR code" /></div>
+        <p className="wallet-note">This code identifies your account. A cashier must still verify your purchase.</p>
+        <h3>Your customer ID</h3><code>{userId}</code>
         <button type="button" className="wallet-refresh" onClick={async () => { try { await navigator.clipboard.writeText(userId); setCopied(true) } catch { setCopied(false); setError('Could not copy. Select your customer ID to copy it manually.') } }}>{copied ? 'Customer ID copied' : 'Copy customer ID'}</button>
       </section>
       {error && <p className="error" role="status">{error}</p>}
