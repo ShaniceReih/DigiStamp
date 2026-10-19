@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase'
+import StampIcon from './StampIcon'
 
 type Shop = {
   id: string
@@ -94,13 +95,13 @@ export default function ShopVisit({
         ← Back to My DigiStamp
       </a>
 
-      {loading && <p>Loading café...</p>}
+      {loading && <p className="loading-state" role="status">Loading café...</p>}
 
       {error && <p className="error">{error}</p>}
 
       {!loading && !error && shop && (
         <>
-          <div className="shop-icon">☕</div>
+          <div className="shop-icon"><StampIcon kind="cafe" /></div>
 
           <h2>{shop.name}</h2>
           <p className="subtitle">
@@ -127,10 +128,12 @@ export default function ShopVisit({
                       ? 'wallet-stamp filled'
                       : 'wallet-stamp'
                   }
+                  role="img"
+                  aria-label={index < Math.min(balance?.stamps ?? 0, 10) ? 'Earned stamp' : 'Empty stamp'}
                 >
                   {index < Math.min(balance?.stamps ?? 0, 10)
-                    ? '★'
-                    : '☆'}
+                    ? <StampIcon kind="check" />
+                    : index === 9 ? <StampIcon kind="star" /> : null}
                 </div>
               ))}
             </div>

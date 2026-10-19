@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase'
 import CashierTest from './CashierTest'
 import ShopQRCode from './ShopQRCode'
+import StampIcon from './StampIcon'
 
 type RoleStatus = 'loading' | 'staff' | 'customer' | 'error'
 
@@ -88,7 +89,7 @@ export default function DigiStampHome({ userId }: Props) {
   }, [role, userId, refresh])
 
   if (role === 'loading') {
-    return <p>Checking DigiStamp account...</p>
+    return <p className="loading-state" role="status">Checking DigiStamp account...</p>
   }
 
   if (role === 'error') {
@@ -127,14 +128,15 @@ export default function DigiStampHome({ userId }: Props) {
         </button>
       </div>
 
-      {loading && <p>Loading your stamps...</p>}
+      {loading && <p className="loading-state" role="status">Loading your stamps...</p>}
 
       {error && (
         <p className="error">Unable to load wallet: {error}</p>
       )}
 
       {!loading && !error && wallet.length === 0 && (
-        <div className="wallet-cafe">
+        <div className="wallet-cafe wallet-empty">
+          <StampIcon />
           <h3>No stamps yet!</h3>
           <p>Visit a participating cafe to start earning rewards.</p>
         </div>
@@ -167,8 +169,11 @@ export default function DigiStampHome({ userId }: Props) {
                       ? 'Earned stamp'
                       : 'Empty stamp'
                   }
+                  role="img"
                 >
-                  {index < Math.min(account.stamps, 10) ? '★' : '☆'}
+                  {index < Math.min(account.stamps, 10)
+                    ? <StampIcon kind="check" />
+                    : index === 9 ? <StampIcon kind="star" /> : null}
                 </div>
               ))}
             </div>

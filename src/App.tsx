@@ -7,6 +7,7 @@ import './App.css'
 import DigiStampHome from './DigiStampHome'
 import ShopVisit from './ShopVisit'
 import WelcomeScreen from './WelcomeScreen'
+import StampIcon from './StampIcon'
 
 
 
@@ -145,30 +146,31 @@ const shopSlug = new URLSearchParams(
   }
 
   if (checking) {
-    return <div className="page"><p>Loading DigiStamp...</p></div>
+    return <div className="page"><p className="loading-state" role="status">Loading DigiStamp...</p></div>
   }
 
   if (user) {
     return (
       <main className="page">
         <section className="auth-card dashboard">
-          <div className="brand-icon">D</div>
-          <h1>Welcome to DigiStamp!</h1>
-          <p className="subtitle">Scan. Play. Earn. Return.</p>
+          <header className="dashboard-header">
+            <div className="brand-icon"><StampIcon /></div>
+            <h1>Welcome to DigiStamp!</h1>
+            <p className="tagline">Scan. Play. Earn. Return.</p>
+          </header>
           <div className="welcome-box">
             {shopSlug ? (
-  <ShopVisit
-    userId={user.id}
-    shopSlug={shopSlug}
-  />
-) : (
-  <DigiStampHome userId={user.id} />
-)}
-            <p>You're successfully logged in.</p>
-            <strong>
-              {user.user_metadata?.full_name || user.email}
-            </strong>
-            <small>{user.email}</small>
+              <ShopVisit userId={user.id} shopSlug={shopSlug} />
+            ) : (
+              <DigiStampHome userId={user.id} />
+            )}
+            <div className="account-details">
+              <p>You're successfully logged in.</p>
+              <strong>
+                {user.user_metadata?.full_name || user.email}
+              </strong>
+              <small>{user.email}</small>
+            </div>
           </div>
           {message && (
             <p role="status" className={isError ? 'error' : 'success'}>
@@ -176,7 +178,7 @@ const shopSlug = new URLSearchParams(
             </p>
           )}
           <button
-            className="primary-button"
+            className="text-button sign-out"
             onClick={handleLogout}
             disabled={loading}
           >
@@ -203,8 +205,8 @@ const shopSlug = new URLSearchParams(
           &larr; Back to welcome
         </button>
         <header className="auth-header">
-          <div className="brand-icon">D</div>
-          <h1>DigiStamp</h1>
+          <div className="brand-icon"><StampIcon /></div>
+          <h1 className="wordmark">DigiStamp</h1>
           <p className="tagline">Scan. Play. Earn. Return.</p>
         </header>
 

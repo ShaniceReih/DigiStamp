@@ -83,7 +83,7 @@ export default function CashierTest() {
   }
 
   return (
-    <section style={{ marginTop: 24, textAlign: 'left' }}>
+    <section className="cashier-panel">
       <h2>Cashier Testing Panel</h2>
       <p className="subtitle">DigiStamp Demo Café</p>
 
@@ -119,7 +119,7 @@ export default function CashierTest() {
       </form>
 
       {message && (
-        <p role="status" style={{ marginTop: 16 }}>
+        <p role="status" className={message.startsWith('Error:') ? 'error' : message.startsWith('Success!') ? 'success' : 'status-message'}>
           {message}
         </p>
       )}

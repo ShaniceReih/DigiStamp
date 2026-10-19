@@ -1,26 +1,10 @@
-@font-face {
-  font-family: 'Manrope';
-  src: url('/fonts/manrope-variable.ttf') format('truetype');
-  font-style: normal;
-  font-weight: 200 800;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Fraunces';
-  src: url('/fonts/fraunces-variable.ttf') format('truetype');
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-}
-
 /* Keep this an app entry screen, including on wide browsers. */
 .welcome-page {
-  --welcome-brown: #622B14;
-  --welcome-caramel: #995F2F;
-  --welcome-olive: #978F66;
-  --welcome-cream: #E4D6A9;
-  --welcome-muted: #6c6259;
+  --welcome-brown: var(--brown);
+  --welcome-caramel: var(--caramel);
+  --welcome-olive: var(--olive);
+  --welcome-cream: var(--cream);
+  --welcome-muted: var(--muted);
   min-height: 100vh;
   min-height: 100svh;
   background: #fff;

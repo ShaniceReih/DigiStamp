@@ -94,7 +94,7 @@ export default function ShopQRCode({ userId }: Props) {
         Display your DigiStamp QR code at checkout.
       </p>
 
-      {loading && <p>Loading QR codes...</p>}
+      {loading && <p className="loading-state" role="status">Loading QR codes...</p>}
       {error && <p className="error">{error}</p>}
 
       {!loading && shops.length === 0 && !error && (
@@ -119,6 +119,7 @@ export default function ShopQRCode({ userId }: Props) {
             <div className="qr-image">
               <QRCodeSVG
                 value={link}
+                fgColor="#622b14"
                 size={210}
                 level="M"
                 marginSize={4}
@@ -126,7 +127,7 @@ export default function ShopQRCode({ userId }: Props) {
               />
             </div>
 
-            <p className="qr-link">{link}</p>
+            <p className="qr-link"><a href={link}>{link}</a></p>
 
             <button
               type="button"

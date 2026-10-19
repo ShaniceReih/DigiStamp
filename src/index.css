@@ -1,21 +1,49 @@
+@font-face {
+  font-family: 'Manrope';
+  src: url('/fonts/manrope-variable.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Fraunces';
+  src: url('/fonts/fraunces-variable.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
 
 :root {
-  font-family: Inter, 'Segoe UI', Arial, sans-serif;
+  --brown: #622b14;
+  --caramel: #995f2f;
+  --olive: #978f66;
+  --cream: #e4d6a9;
+  --ink: #3e3026;
+  --muted: #6c6259;
+  --canvas: #f4f2ec;
+  --surface: #fff;
+  --paper: #fbf6e8;
+  --line: #e5ddd1;
+  --error: #9c342e;
+  --error-surface: #fcf0ed;
+  --success: #526039;
+  --success-surface: #f0f3e9;
+  font-family: 'Manrope', sans-serif;
+  color: var(--ink);
+  background: var(--canvas);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  color-scheme: light;
+  scrollbar-color: var(--olive) var(--canvas);
 }
 
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-button, input {
-  font-family: inherit;
-}
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; min-height: 100vh; }
+button, input { font: inherit; }
+button, a, input { -webkit-tap-highlight-color: transparent; }
+input { caret-color: var(--caramel); }
+::selection { color: var(--brown); background: var(--cream); }
+:focus-visible { outline: 2px solid var(--brown); outline-offset: 4px; }
+a { text-underline-offset: 4px; }
