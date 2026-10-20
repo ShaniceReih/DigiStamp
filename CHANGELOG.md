@@ -2,6 +2,15 @@
 
 Release versions use semantic versioning. Dates use Asia/Manila time.
 
+## [0.4.1] - 2026-10-20
+
+### App Design Refinements
+
+- Preserve the approved earth-tone palette, Manrope app type, Fraunces wordmark, and tilted perforated welcome card while refining spacing and paper details.
+- Improve customer navigation, stamp balance hierarchy, form readability, loading placeholders, and account and unavailable-cafe screen titles.
+- Refine merchant tool navigation and desktop reward-editor layouts while keeping ownership, trial access, authentication, and transaction behavior intact.
+- Keep browser fixtures, design inspections, and visual previews out of releases. No new database migration is required.
+
 ## [0.4.0] - 2026-10-19
 
 ### Usernames, Account Settings, and Developer Administration

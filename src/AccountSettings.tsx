@@ -68,7 +68,7 @@ export default function AccountSettings({ email, onBack, onAdmin, onSaved, onDel
     })
   }
   return <section className="account-settings">
-    <button type="button" className="text-button welcome-back" onClick={onBack}>← Back</button><h2>Account settings</h2><p className="subtitle">Your profile, sign-in details, and account access.</p>
+    <button type="button" className="text-button welcome-back" onClick={onBack}>← Back</button><h1>Account settings</h1><p className="subtitle">Your profile, sign-in details, and account access.</p>
     {!account && !message && <p role="status">Loading account…</p>}
     {account && <>
       <div className="account-status"><span>Account status</span><div>{account.roles.map(role => <span key={role} className="role-badge">{role}</span>)}</div><small>{account.customer_code}</small></div>

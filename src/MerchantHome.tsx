@@ -42,7 +42,7 @@ export default function MerchantHome({ memberships }: { memberships: Membership[
 
   const link = cafe?.qr_code ? new URL(`/?shop=${encodeURIComponent(cafe.qr_code)}`, window.location.origin).toString() : ''
   return <section className="merchant-home">
-    <header className="merchant-heading"><div><h2>Your café workspace</h2><p className="subtitle">A good visit starts here.</p></div>
+    <header className="merchant-heading"><div><h1>Your café workspace</h1><p className="subtitle">A good visit starts here.</p></div>
     {shops.length > 0 && <label>Café<select aria-label="Café" value={shopId} onChange={event => { setLoading(true); setError(''); setCopyError(''); setShopId(event.target.value); setTab('checkout'); setCopied(false) }}>{shops.map(shop => <option key={shop.id} value={shop.id}>{shop.name}</option>)}</select></label>}
     </header>
     {error && <><p role="alert" className="error">{error}</p><button type="button" className="wallet-refresh" onClick={() => { setLoading(true); setError(''); setRefresh(value => value + 1) }}>Try again</button></>}

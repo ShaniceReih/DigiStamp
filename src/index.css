@@ -25,6 +25,17 @@
   --surface: #fff;
   --paper: #fbf6e8;
   --line: #e5ddd1;
+  --control-line: #a28f77;
+  --neutral-active: #f0eeea;
+  --radius-panel: 20px;
+  --radius-control: 12px;
+  --section-gap: 28px;
+  --paper-edge:
+    linear-gradient(#000 0 0) center / calc(100% - 12px) calc(100% - 12px) no-repeat, /* taste-skill-ignore: alpha mask for approved perforated paper, not a visible gradient */
+    radial-gradient(circle at 6px 0, transparent 3px, #000 3.5px) top / 12px 6px repeat-x, /* taste-skill-ignore: alpha mask for approved perforated paper, not a visible gradient */
+    radial-gradient(circle at 6px 6px, transparent 3px, #000 3.5px) bottom / 12px 6px repeat-x, /* taste-skill-ignore: alpha mask for approved perforated paper, not a visible gradient */
+    radial-gradient(circle at 0 6px, transparent 3px, #000 3.5px) left / 6px 12px repeat-y, /* taste-skill-ignore: alpha mask for approved perforated paper, not a visible gradient */
+    radial-gradient(circle at 6px 6px, transparent 3px, #000 3.5px) right / 6px 12px repeat-y; /* taste-skill-ignore: alpha mask for approved perforated paper, not a visible gradient */
   --error: #9c342e;
   --error-surface: #fcf0ed;
   --success: #526039;
@@ -41,7 +52,7 @@
 
 * { box-sizing: border-box; }
 body { margin: 0; min-width: 320px; min-height: 100vh; }
-button, input { font: inherit; }
+button, input, select, textarea { font: inherit; }
 button, a, input { -webkit-tap-highlight-color: transparent; }
 input { caret-color: var(--caramel); }
 ::selection { color: var(--brown); background: var(--cream); }
