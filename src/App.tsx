@@ -177,7 +177,7 @@ const shopSlug = new URLSearchParams(
       <main className="page">
         <section className="auth-card dashboard">
           <header className="dashboard-header">
-            <div className="app-brand"><span className="app-emblem"><StampIcon /></span><div><h1 className="wordmark">DigiStamp</h1><p className="tagline">Scan. Play. Earn. Return.</p></div></div>
+            <div className="app-brand"><span className="app-emblem"><StampIcon /></span><div><p className="wordmark">DigiStamp</p><p className="tagline">Scan. Play. Earn. Return.</p></div></div>
             <button type="button" className="user-avatar" aria-label="Open account settings" onClick={() => setScreen('settings')}>{String(profileName || user.user_metadata?.full_name || user.email || 'D').slice(0, 1).toUpperCase()}</button>
           </header>
           <div className="welcome-box">
@@ -228,11 +228,11 @@ const shopSlug = new URLSearchParams(
         </button>
         <header className="auth-header">
           <div className="brand-icon"><StampIcon /></div>
-          <h1 className="wordmark">DigiStamp</h1>
+          <p className="wordmark">DigiStamp</p>
           <p className="tagline">Scan. Play. Earn. Return.</p>
         </header>
 
-        <h2>{mode === 'signup' ? 'Create your account' : 'Welcome back!'}</h2>
+        <h1 className="auth-title">{mode === 'signup' ? 'Create your account' : 'Welcome back!'}</h1>
         <p className="subtitle">
           {mode === 'signup'
             ? 'Join DigiStamp and start collecting rewards.'

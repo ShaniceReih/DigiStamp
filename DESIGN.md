@@ -26,3 +26,16 @@ Use self-hosted Manrope for app text and controls, and Fraunces for the DigiStam
 ## Validation
 
 Run the production build and lint after UI changes. Check the welcome, authentication, wallet, café visit, merchant QR, and cashier screens at mobile and desktop widths, including long content and empty states. Visual fixtures must stay separate from production data and permissions.
+
+## Taste Skill refinement
+
+The app-screen direction is Pastel consumer (seed 546567093), adapted to the approved palette and type with no redraw. The face is the Manrope stamp balance and Fraunces brand wordmark; the product signature remains cafe-specific paper cards, tilted only on welcome. No analytics or aggregate cross-cafe reward totals are introduced.
+
+- Keep operational screen titles compact and descriptive. The signed-in brand name is a wordmark, with the actual screen title as its h1.
+- Use neutral active navigation, white list surfaces, and pale paper only where it communicates a loyalty card or a quiet action. Preserve cafe-owned custom colors.
+- Use 16px inputs to avoid mobile focus zoom, 13px app labels and supporting text, 12px metadata, and at least 44px controls. Disabled trial controls retain readable text and explain availability.
+- The collection loading state keeps its card frame with flat, nonanimated placeholders. Errors retain a descriptive title and recovery path where one exists.
+- Resting app panels use a quiet border instead of a floating shadow. The welcome paper alone keeps a small offset shadow and its -3 degree perforated silhouette.
+- Merchant navigation remains a sidebar on desktop and a two-column tool group on mobile; reward editors use a balanced desktop grid and stack on phones. Customer navigation stays within the app frame.
+
+The approved brown/cream palette, physical perforations, stamp ink outlines, brand emblem, and narrow customer app frame are intentional exceptions to generic detector preferences. Design reports and simulated data are kept in the ignored .taste-skill folder, never in the production data path.

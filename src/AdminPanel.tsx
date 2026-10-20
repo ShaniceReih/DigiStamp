@@ -83,7 +83,7 @@ export default function AdminPanel({ onBack, currentUserId }: { onBack: () => vo
   }
   const primary = (row: Row) => String(row.username ?? row.name ?? row.title ?? row.receipt_reference ?? row.operation ?? row.customer_id ?? row.user_id ?? row.shop_id ?? row.id)
   return <section className="admin-panel">
-    <button type="button" className="text-button welcome-back" onClick={onBack}>← Back to account</button><h2>Developer admin</h2><p className="subtitle">Manage DigiStamp across cafés. Edits require a reason and are recorded in the audit trail.</p>
+    <button type="button" className="text-button welcome-back" onClick={onBack}>← Back to account</button><h1>Developer admin</h1><p className="subtitle">Manage DigiStamp across cafés. Edits require a reason and are recorded in the audit trail.</p>
     <div className="admin-filters"><label>Section<select aria-label="Section" value={entity} onChange={event => { setEntity(event.target.value); setSelected(null); setInvite(false); setPage(0); setLoading(true); setMessage('') }}>{Object.entries(sections).map(([key,label]) => <option key={key} value={key}>{label}</option>)}</select></label>
       <label>Café filter<select aria-label="Café filter" value={shop} onChange={event => { setShop(event.target.value); setPage(0); setLoading(true) }}><option value="">All cafés</option>{cafes.map(cafe => <option key={String(cafe.id)} value={String(cafe.id)}>{String(cafe.name)}</option>)}</select></label>
       <label>Search<input value={search} onChange={event => { setSearch(event.target.value); setPage(0); setLoading(true) }} placeholder="Username, customer ID, café, or receipt" /></label></div>

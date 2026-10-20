@@ -102,13 +102,13 @@ export default function ShopVisit({
 
       {loading && <p className="loading-state" role="status">Loading café...</p>}
 
-      {error && <p className="error">{error}</p>}
+      {error && <><h1>Café unavailable</h1><p className="error" role="alert">{error}</p></>}
 
       {!loading && !error && shop && (
         <>
           <div className="shop-icon"><StampIcon kind="cafe" /></div>
 
-          <h2>{shop.name}</h2>
+          <h1>{shop.name}</h1>
           <p className="subtitle">
             {shop.address || 'DigiStamp Partner Café'}
           </p>

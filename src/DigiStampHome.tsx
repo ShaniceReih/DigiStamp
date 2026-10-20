@@ -71,21 +71,21 @@ export default function DigiStampHome({ userId, userName, email, onSignOut, sign
   }, [checking, roleError, memberships, view, userId, refresh])
 
   if (checking) return <p className="loading-state" role="status">Checking DigiStamp account…</p>
-  if (roleError) return <><p role="alert" className="error">Unable to verify your café permissions: {roleError}</p><button type="button" className="wallet-refresh" onClick={() => { setChecking(true); setRoleError(''); setRoleAttempt(value => value + 1) }}>Try again</button></>
+  if (roleError) return <><h1 className="app-state-title">Account access</h1><p role="alert" className="error">Unable to verify your café permissions: {roleError}</p><button type="button" className="wallet-refresh" onClick={() => { setChecking(true); setRoleError(''); setRoleAttempt(value => value + 1) }}>Try again</button></>
   return <>
     {memberships.length > 0 && <nav className="workspace-nav" aria-label="Account view">
       <button type="button" aria-pressed={view === 'merchant'} onClick={() => setView('merchant')}>Café workspace</button>
       <button type="button" aria-pressed={view === 'wallet'} onClick={() => { setLoading(true); setError(''); setView('wallet') }}>My wallet</button>
     </nav>}
     {memberships.length > 0 && view === 'merchant' ? <MerchantHome memberships={memberships} /> : <section className="customer-shell">
-      <header className="customer-greeting"><p>Hello{userName ? `, ${userName.split(' ')[0]}` : ' there'}.</p><h2>{customerTab === 'wallet' ? 'Make every visit count.' : customerTab === 'rewards' ? 'A little something to return for.' : customerTab === 'play' ? 'A little play. A little reward.' : 'Your DigiStamp account.'}</h2></header>
+      <header className="customer-greeting"><p>Hello{userName ? `, ${userName.split(' ')[0]}` : ' there'}.</p><h1>{customerTab === 'wallet' ? 'My collection' : customerTab === 'rewards' ? 'Rewards' : customerTab === 'play' ? 'Play' : 'Account'}</h1></header>
       {customerTab === 'wallet' && <>
-      <section className="collection-banner" aria-label="Your café collection"><div><h3>Your café collection</h3><p>{loading ? 'Finding your cards…' : `${wallet.length} ${wallet.length === 1 ? 'café card' : 'café cards'}, all in one place.`}</p></div><span className="collection-art" aria-hidden="true"><StampIcon /></span>
+      <section className="collection-banner" aria-label="Your café collection"><div><h3>Your cafés</h3><p>{loading ? 'Finding your cards…' : `${wallet.length} ${wallet.length === 1 ? 'café card' : 'café cards'} in your collection.`}</p></div>
         <div className="collection-actions"><button type="button" onClick={() => setCustomerTab('rewards')}><StampIcon kind="gift" />My rewards</button><button type="button" onClick={() => setCustomerTab('account')}><StampIcon kind="qr" />My QR code</button></div>
       </section>
       <section className="wallet">
       <div className="wallet-header"><h2>My Digital Stamps</h2><button type="button" className="wallet-refresh" disabled={loading} onClick={() => { setLoading(true); setError(''); setRefresh(value => value + 1) }}>Refresh</button></div>
-      {loading && <p className="loading-state" role="status">Loading your stamps…</p>}
+      {loading && <div className="wallet-skeleton" role="status" aria-label="Loading your stamps"><span className="visually-hidden">Loading your stamps...</span><div aria-hidden="true" className="skeleton-line" /><div aria-hidden="true" className="skeleton-line skeleton-balance" /><div aria-hidden="true" className="skeleton-stamps">{[0,1,2,3,4].map(index => <span key={index} />)}</div><div aria-hidden="true" className="skeleton-line skeleton-caption" /></div>}
       {error && <p role="alert" className="error">Unable to load wallet: {error}</p>}
       {!loading && !error && !wallet.length && <div className="wallet-cafe wallet-empty"><StampIcon /><h3>No stamps yet!</h3><p>Visit a participating café to start earning rewards.</p></div>}
       {!loading && !error && wallet.map(account => {

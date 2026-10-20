@@ -1,94 +1,69 @@
-/* Keep this an app entry screen, including on wide browsers. */
-.welcome-page {
-  --welcome-brown: var(--brown);
-  --welcome-caramel: var(--caramel);
-  --welcome-olive: var(--olive);
-  --welcome-cream: var(--cream);
-  --welcome-muted: var(--muted);
-  min-height: 100vh;
-  min-height: 100svh;
-  background: #fff;
-  color: var(--welcome-brown);
-  font-family: 'Manrope', sans-serif;
-}
-.welcome-page ::selection { background: var(--welcome-cream); color: var(--welcome-brown); }
-.welcome-screen {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 440px;
-  min-height: 100vh;
-  min-height: 100svh;
-  margin: 0 auto;
-  padding: max(28px, env(safe-area-inset-top)) 28px max(20px, env(safe-area-inset-bottom));
-  background: #fff;
-  text-align: center;
-}
-.welcome-content { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 16px 0 24px; }
+/* Approved single-column app entry: the tilted paper is the signature. */
+.welcome-page { min-height: 100vh; min-height: 100svh; background: var(--surface); color: var(--brown); }
+.welcome-screen { display: flex; flex-direction: column; width: 100%; max-width: 440px; min-height: 100vh; min-height: 100svh; margin: 0 auto; padding: max(32px,env(safe-area-inset-top)) 24px max(20px,env(safe-area-inset-bottom)); background: var(--surface); text-align: center; }
+.welcome-content { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 20px 0 32px; }
 .welcome-brand { display: flex; flex-direction: column; align-items: center; }
-.welcome-emblem { display: grid; place-items: center; width: 72px; height: 72px; margin-bottom: 18px; border-radius: 50%; background: var(--welcome-cream); color: var(--welcome-caramel); outline: 1px solid var(--welcome-olive); outline-offset: 5px; }
-.welcome-emblem svg { width: 44px; height: 44px; transform: translateY(-3px); }
-.welcome-brand h1 { margin: 0; font-family: 'Fraunces', Georgia, serif; font-size: 36px; line-height: 1.2; font-weight: 600; font-variation-settings: 'SOFT' 35, 'WONK' 1, 'opsz' 36; letter-spacing: -.025em; color: var(--welcome-brown); }
-.welcome-tagline { margin: 8px 0 0; font-size: 11px; line-height: 1.5; font-weight: 500; letter-spacing: .04em; color: var(--welcome-muted); }
-.welcome-intro { margin-top: 28px; }
-.welcome-intro h2 { margin: 0; font-size: 20px; line-height: 1.4; font-weight: 700; letter-spacing: -.025em; color: var(--welcome-brown); text-wrap: balance; }
-.welcome-intro > p { max-width: 32ch; margin: 12px auto 0; color: var(--welcome-muted); font-size: 14px; line-height: 1.65; text-wrap: pretty; }
-
-/* A tilted, perforated paper card with stamped ink, not a live wallet. */
-.welcome-paper { width: 100%; max-width: 336px; margin: 30px auto 0; filter: drop-shadow(0 8px 12px #622b1415); }
-.stamp-paper {
-  padding: 22px 20px 18px;
-  background: #fbf6e8;
-  transform: rotate(-3deg);
-  mask:
-    linear-gradient(#000 0 0) center / calc(100% - 12px) calc(100% - 12px) no-repeat,
-    radial-gradient(circle at 6px 0, transparent 3px, #000 3.5px) top / 12px 6px repeat-x,
-    radial-gradient(circle at 6px 6px, transparent 3px, #000 3.5px) bottom / 12px 6px repeat-x,
-    radial-gradient(circle at 0 6px, transparent 3px, #000 3.5px) left / 6px 12px repeat-y,
-    radial-gradient(circle at 6px 6px, transparent 3px, #000 3.5px) right / 6px 12px repeat-y;
-}
-.stamp-paper-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
-.stamp-paper-heading strong { font-size: 12px; font-weight: 700; }
-.stamp-paper-heading > span { color: var(--welcome-muted); font-size: 11px; font-variant-numeric: tabular-nums; }
-.paper-stamps { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin: 18px 0 15px; }
-.paper-stamp { display: grid; place-items: center; aspect-ratio: 1; border: 1px dashed var(--welcome-olive); border-radius: 50%; color: var(--welcome-caramel); }
-.paper-stamp.is-stamped { border: 3px double currentColor; background: #995f2f08; transform: rotate(-8deg); }
+.welcome-emblem { display: grid; place-items: center; width: 64px; height: 64px; margin-bottom: 20px; border-radius: 50%; background: var(--cream); color: var(--brown); outline: 1px solid var(--olive); outline-offset: 5px; }
+.welcome-emblem svg { width: 36px; height: 36px; }
+.welcome-brand h1 { margin: 0; font-family: 'Fraunces',Georgia,serif; font-size: 28px; line-height: 1.2; font-weight: 600; font-variation-settings: 'SOFT' 35, 'WONK' 1, 'opsz' 36; letter-spacing: -.025em; }
+.welcome-tagline { margin: 10px 0 0; font-size: 13px; line-height: 1.5; color: var(--muted); }
+.welcome-intro { margin-top: 32px; }
+.welcome-intro h2 { margin: 0; font-size: 20px; line-height: 1.4; font-weight: 650; letter-spacing: -.02em; }
+.welcome-intro > p { max-width: 32ch; margin: 14px auto 0; color: var(--muted); font-size: 14px; line-height: 1.7; text-wrap: pretty; }
+.welcome-paper { width: 100%; max-width: 344px; margin: 32px auto 0; filter: drop-shadow(0 3px 6px #622b140d); /* taste-skill-ignore: user-requested physical paper depth */ }
+/* Perforation geometry gives the requested paper its edge. */
+.stamp-paper { position: relative; padding: 26px 22px 22px; background: var(--paper); transform: rotate(-3deg); mask: var(--paper-edge); }
+.stamp-paper-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; text-align: left; }
+.stamp-paper-heading strong { font-size: 14px; font-weight: 650; }
+.stamp-paper-heading > span { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.stamp-paper-heading b { color: var(--brown); font-weight: 650; }
+.paper-stamps { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 10px; margin: 22px 0 20px; }
+.paper-stamp { display: grid; place-items: center; aspect-ratio: 1; border: 1px dashed var(--olive); border-radius: 50%; color: var(--caramel); }
+.paper-stamp.is-stamped { border: 3px double currentColor; background: color-mix(in srgb,var(--caramel) 5%,transparent); transform: rotate(-8deg); }
 .paper-stamp.is-stamped:nth-child(2) { transform: rotate(5deg); }
 .paper-stamp.is-stamped:nth-child(3) { transform: rotate(-13deg); }
-.paper-stamp svg { width: 22px; height: 22px; }
-.stamp-paper > p { margin: 0; padding-top: 12px; border-top: 1px dashed var(--welcome-olive); color: var(--welcome-muted); font-size: 11px; line-height: 1.5; }
-.welcome-paper figcaption { margin-top: 14px; color: var(--welcome-muted); font-size: 10px; line-height: 1.5; }
-
+.paper-stamp svg { width: 23px; height: 23px; }
+.stamp-paper > p { margin: 0; padding-top: 14px; border-top: 1px dashed var(--olive); color: var(--muted); font-size: 13px; line-height: 1.5; }
+.welcome-paper figcaption { margin-top: 18px; color: var(--muted); font-size: 12px; line-height: 1.5; }
 .welcome-actions { flex-shrink: 0; }
-.welcome-sign-in.primary-button { min-height: 54px; margin: 0; padding: 15px 20px; border-radius: 12px; background: var(--welcome-caramel); color: #fff; font-size: 15px; font-weight: 700; line-height: 1.5; transition: background 160ms ease-out; }
-.welcome-sign-in.primary-button:hover:not(:disabled), .welcome-sign-in.primary-button:active { background: var(--welcome-brown); }
-.welcome-sign-in.primary-button:disabled { opacity: .6; cursor: not-allowed; }
-.welcome-account { margin: 18px 0 0; color: var(--welcome-muted); font-size: 12px; line-height: 1.5; }
-.welcome-sign-up.text-button { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 12px; color: var(--welcome-brown); font-size: 13px; font-weight: 700; border-radius: 8px; }
-.welcome-sign-up.text-button:hover { background: #f8f5ee; }
-.welcome-sign-up.text-button:active { background: var(--welcome-cream); }
-.welcome-page button:focus-visible { outline: 2px solid var(--welcome-brown); outline-offset: 4px; }
-
-@media (min-width: 600px) {
-  .welcome-page { display: grid; place-items: center; padding: 32px 24px; background: #f4f2ec; }
-  .welcome-screen { min-height: min(800px, calc(100svh - 64px)); padding: 36px 32px 24px; border-radius: 24px; box-shadow: 0 12px 40px #622b140a; }
+.welcome-sign-in.primary-button { display: flex; align-items: center; justify-content: center; gap: 14px; min-height: 54px; margin: 0; font-size: 15px; font-weight: 650; }
+.welcome-sign-in > span { font-size: 19px; line-height: 1; }
+.welcome-account { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; column-gap: 4px; margin: 12px 0 0; color: var(--muted); font-size: 13px; }
+.welcome-sign-up.text-button { min-height: 44px; padding-inline: 4px; font-size: 13px; font-weight: 650; text-decoration: underline; text-underline-offset: 4px; }
+@media(min-width:600px) {
+  .welcome-page { display: grid; place-items: center; padding: 32px 24px; background: var(--canvas); }
+  .welcome-screen { min-height: min(780px,calc(100svh - 64px)); padding: 32px; border: 1px solid var(--line); border-radius: 24px; }
 }
-@media (max-height: 740px) {
-  .welcome-screen { padding-top: 22px; }
-  .welcome-content { padding-top: 8px; padding-bottom: 20px; }
-  .welcome-emblem { width: 56px; height: 56px; margin-bottom: 14px; }
-  .welcome-emblem svg { width: 36px; height: 36px; }
-  .welcome-brand h1 { font-size: 32px; }
-  .welcome-intro { margin-top: 20px; }
-  .welcome-paper { margin-top: 24px; }
-  .welcome-account { margin-top: 14px; }
+@media(max-height:740px) {
+  .welcome-screen { padding-top: 24px; }
+  .welcome-content { padding-top: 8px; padding-bottom: 24px; }
+  .welcome-emblem { width: 52px; height: 52px; margin-bottom: 16px; }
+  .welcome-emblem svg { width: 30px; height: 30px; }
+  .welcome-intro { margin-top: 24px; }
+  .welcome-paper { margin-top: 26px; }
 }
-@media (max-height: 620px) {
+@media(max-height:620px) {
+  .welcome-brand h1 { font-size: 28px; }
+  .welcome-tagline { margin-top: 6px; font-size: 12px; }
+  .welcome-intro { margin-top: 18px; }
   .welcome-intro h2 { font-size: 18px; }
-  .welcome-intro > p { margin-top: 8px; font-size: 13px; }
-  .welcome-paper { margin-top: 18px; }
-  .stamp-paper { padding: 18px 18px 14px; }
-  .paper-stamps { margin-top: 12px; margin-bottom: 10px; }
-  .welcome-paper figcaption { margin-top: 10px; }
+  .welcome-intro > p { margin-top: 10px; font-size: 13px; }
+  .welcome-paper { margin-top: 20px; }
+  .stamp-paper { padding: 20px 18px 18px; }
+  .stamp-paper-heading strong { font-size: 13px; }
+  .stamp-paper-heading > span { font-size: 12px; }
+  .paper-stamps { margin: 16px 0 14px; }
+  .stamp-paper > p { font-size: 12px; padding-top: 10px; }
+  .welcome-paper figcaption { margin-top: 12px; }
 }
-@media (prefers-reduced-motion: reduce) { .welcome-sign-in.primary-button { transition: none; } }
+
+@media(max-height:620px) {
+  .welcome-content { padding-bottom: 20px; }
+  .welcome-emblem { width: 44px; height: 44px; margin-bottom: 12px; }
+  .welcome-intro { margin-top: 14px; }
+  .welcome-intro > p { line-height: 1.55; }
+  .welcome-paper { margin-top: 16px; }
+  .stamp-paper { padding-top: 18px; padding-bottom: 16px; }
+  .paper-stamps { margin-top: 12px; margin-bottom: 10px; }
+  .welcome-paper figcaption { margin-top: 8px; }
+}
