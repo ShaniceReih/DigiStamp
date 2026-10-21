@@ -1,4 +1,4 @@
-type Props = { kind?: 'stamp' | 'check' | 'star' | 'cafe' | 'home' | 'gift' | 'play' | 'user' | 'qr' }
+type Props = { kind?: 'stamp' | 'check' | 'star' | 'cafe' | 'home' | 'gift' | 'play' | 'user' | 'qr' | 'receipt' }
 
 export default function StampIcon({ kind = 'stamp' }: Props) {
   return (
@@ -11,6 +11,7 @@ export default function StampIcon({ kind = 'stamp' }: Props) {
       {kind === 'gift' && <><path d="M3 8h18v5H3zM5 13v8h14v-8M12 8v13" /><path d="M12 8H8a3 3 0 1 1 3-3l1 3ZM12 8h4a3 3 0 1 0-3-3l-1 3Z" /></>}
       {kind === 'play' && <><rect x="3" y="6" width="18" height="13" rx="4" /><path d="M7 12h4M9 10v4M16 11h.01M18 14h.01" /></>}
       {kind === 'user' && <><circle cx="12" cy="8" r="4" /><path d="M4 21v-2a8 8 0 0 1 16 0v2" /></>}
+      {kind === 'receipt' && <><path d="M5 3h14v18l-3-2-4 2-4-2-3 2V3Z" /><path d="M9 7h6M9 11h6M9 15h3" /></>}
       {kind === 'qr' && <><path d="M3 3h6v6H3zM15 3h6v6h-6zM3 15h6v6H3zM15 15h3v3h3v3h-6zM12 3v9H3M12 15v6M21 12h-6" /></>}
     </svg>
   )
