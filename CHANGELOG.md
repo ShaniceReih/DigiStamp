@@ -2,6 +2,16 @@
 
 Release versions use semantic versioning. Dates use Asia/Manila time.
 
+## [0.5.0] - 2026-10-21
+
+### Owner Billing Overview
+
+- Add owner-only billing with actual cafe access, trial expiry in Manila time, and enabled customization features.
+- Display Starter, Growth, and Premium packages with monthly per-branch PHP prices and one-time setup fees; mark unavailable features as coming soon.
+- Keep current subscription details separate from the package catalog. Payment collection and invoice history remain unavailable.
+- Add refresh and copy-summary actions, missing/expired access states, and billing boundary tests.
+- No payment provider, access changes, or new database migration is required. Local preview fixtures are excluded from releases.
+
 ## [0.4.2] - 2026-10-21
 
 ### Screen Copy Cleanup

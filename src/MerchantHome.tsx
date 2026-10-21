@@ -6,6 +6,8 @@ import type { Cafe, FeatureAccess, Reward } from './lib/loyalty'
 import CafeSettings from './CafeSettings'
 import CashierPanel from './CashierPanel'
 import StampIcon from './StampIcon'
+import BillingPanel from './BillingPanel'
+import { describeAccess } from './lib/billing'
 
 type Membership = { shop_id: string; role: 'owner' | 'cashier' }
 export default function MerchantHome({ memberships }: { memberships: Membership[] }) {
@@ -18,6 +20,11 @@ export default function MerchantHome({ memberships }: { memberships: Membership[
   const [loading, setLoading] = useState(true)
   const [refresh, setRefresh] = useState(0)
   const [copied, setCopied] = useState(false)
+  const [now, setNow] = useState(() => Date.now())
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(Date.now()), 30000)
+    return () => window.clearInterval(timer)
+  }, [])
   const [copyError, setCopyError] = useState('')
   const owner = memberships.find(item => item.shop_id === shopId)?.role === 'owner'
   const cafe = shops.find(shop => shop.id === shopId)
@@ -53,10 +60,10 @@ export default function MerchantHome({ memberships }: { memberships: Membership[
       <nav className="workspace-nav" aria-label="Café tools">
         <button type="button" aria-pressed={tab === 'checkout'} onClick={() => setTab('checkout')}><StampIcon kind="stamp" />Checkout</button>
         <button type="button" aria-pressed={tab === 'qr'} onClick={() => setTab('qr')}><StampIcon kind="qr" />Café QR</button>
-        {owner && <><button type="button" aria-pressed={tab === 'settings'} onClick={() => setTab('settings')}><StampIcon kind="cafe" />Customize</button><button type="button" aria-pressed={tab === 'reports'} onClick={() => setTab('reports')}><StampIcon kind="home" />Reports<span className="nav-soon">Soon</span></button></>}
+        {owner && <><button type="button" aria-pressed={tab === 'settings'} onClick={() => setTab('settings')}><StampIcon kind="cafe" />Customize</button><button type="button" aria-pressed={tab === 'billing'} onClick={() => setTab('billing')}><StampIcon kind="receipt" />Billing</button><button type="button" aria-pressed={tab === 'reports'} onClick={() => setTab('reports')}><StampIcon kind="home" />Reports<span className="nav-soon">Soon</span></button></>}
       </nav>
       </aside><div className="merchant-content">
-      <div className="workspace-context"><span className="access-label">{access?.status === 'active' ? 'Active access' : access?.status === 'trial' ? 'Trial workspace' : 'Basic access'}</span></div>
+      {tab !== 'billing' && <div className="workspace-context"><span className="access-label">{describeAccess(access, now).label}</span></div>}
       {tab === 'checkout' && <CashierPanel key={shopId} shopId={shopId} />}
       {tab === 'qr' && <section className="qr-panel"><h2>Café QR code</h2><p className="subtitle">Display this at checkout so customers can open your café’s page.</p>
         {link ? <><div className="qr-image"><QRCodeSVG value={link} size={210} level="M" marginSize={4} fgColor="#622b14" title={`QR code for ${cafe.name}`} /></div>
@@ -65,6 +72,7 @@ export default function MerchantHome({ memberships }: { memberships: Membership[
           {copyError && <p className="error" role="status">{copyError}</p>}
           <p className="qr-hint">Scanning opens this café’s page. Only an authorized cashier can award stamps.</p></> : <p className="status-message">A QR identifier has not been assigned to this café yet. Contact DigiStamp to set it up.</p>}
       </section>}
+      {tab === 'billing' && owner && <BillingPanel key={shopId} cafeName={cafe.name} access={access} onRefresh={() => { setLoading(true); setError(''); setRefresh(value => value + 1) }} onCustomize={() => setTab('settings')} />}
       {tab === 'settings' && owner && <CafeSettings key={shopId} cafe={cafe} rewards={rewards} access={access} onSaved={() => setRefresh(value => value + 1)} />}
       {tab === 'reports' && owner && <section className="reports-preview"><span className="coming-soon">Coming soon</span><h2>Understand what brings people back.</h2><p className="subtitle">Monthly summaries and retention reports will appear here once reporting is available.</p></section>}
       </div>
