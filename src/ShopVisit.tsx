@@ -117,7 +117,7 @@ export default function ShopVisit({
             <p>{shop.description}</p>
           )}
 
-          <LoyaltyCard cafe={shop} stamps={balance?.stamps ?? 0} points={balance?.points ?? 0} rewards={rewards} />
+          <LoyaltyCard showIdentity={false} cafe={shop} stamps={balance?.stamps ?? 0} points={balance?.points ?? 0} rewards={rewards} />
 
           <p className="shop-instruction">
             Show your purchase to the cashier.

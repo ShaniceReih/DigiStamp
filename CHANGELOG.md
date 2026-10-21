@@ -2,6 +2,14 @@
 
 Release versions use semantic versioning. Dates use Asia/Manila time.
 
+## [0.4.2] - 2026-10-21
+
+### Screen Copy Cleanup
+
+- Remove repeated Account, collection, and Rewards headings and show the customer greeting only on Home.
+- Show each cafe identity once in cafe details and the merchant workspace, and trim repeated QR and coming-soon explanations.
+- Preserve navigation, authentication, permissions, and transaction behavior. No new database migration is required.
+
 ## [0.4.1] - 2026-10-20
 
 ### App Design Refinements

@@ -55,10 +55,9 @@ export default function MerchantHome({ memberships }: { memberships: Membership[
         <button type="button" aria-pressed={tab === 'qr'} onClick={() => setTab('qr')}><StampIcon kind="qr" />Café QR</button>
         {owner && <><button type="button" aria-pressed={tab === 'settings'} onClick={() => setTab('settings')}><StampIcon kind="cafe" />Customize</button><button type="button" aria-pressed={tab === 'reports'} onClick={() => setTab('reports')}><StampIcon kind="home" />Reports<span className="nav-soon">Soon</span></button></>}
       </nav>
-      <div className="workspace-help"><StampIcon kind="check" /><p>Every stamp starts with a verified purchase.</p></div>
       </aside><div className="merchant-content">
-      <div className="workspace-context"><span>{cafe.name}</span><span className="access-label">{access?.status === 'active' ? 'Active access' : access?.status === 'trial' ? 'Trial workspace' : 'Basic access'}</span></div>
-      {tab === 'checkout' && <CashierPanel key={shopId} shopId={shopId} shopName={cafe.name} />}
+      <div className="workspace-context"><span className="access-label">{access?.status === 'active' ? 'Active access' : access?.status === 'trial' ? 'Trial workspace' : 'Basic access'}</span></div>
+      {tab === 'checkout' && <CashierPanel key={shopId} shopId={shopId} />}
       {tab === 'qr' && <section className="qr-panel"><h2>Café QR code</h2><p className="subtitle">Display this at checkout so customers can open your café’s page.</p>
         {link ? <><div className="qr-image"><QRCodeSVG value={link} size={210} level="M" marginSize={4} fgColor="#622b14" title={`QR code for ${cafe.name}`} /></div>
           <p className="qr-link"><a href={link}>{link}</a></p>
@@ -67,7 +66,7 @@ export default function MerchantHome({ memberships }: { memberships: Membership[
           <p className="qr-hint">Scanning opens this café’s page. Only an authorized cashier can award stamps.</p></> : <p className="status-message">A QR identifier has not been assigned to this café yet. Contact DigiStamp to set it up.</p>}
       </section>}
       {tab === 'settings' && owner && <CafeSettings key={shopId} cafe={cafe} rewards={rewards} access={access} onSaved={() => setRefresh(value => value + 1)} />}
-      {tab === 'reports' && owner && <section className="reports-preview"><span className="coming-soon">Coming soon</span><h2>Understand what brings people back.</h2><p className="subtitle">Monthly summaries and retention reports are planned. This workspace does not calculate them yet.</p><div className="report-placeholder"><StampIcon kind="home" /><h3>Your café’s activity, in focus.</h3><p>Verified visits, returning customers, and reward redemptions will belong here once reporting is implemented.</p></div><p className="wallet-note">No sales figures, visit trends, or subscription benefits are being estimated or shown as live data.</p></section>}
+      {tab === 'reports' && owner && <section className="reports-preview"><span className="coming-soon">Coming soon</span><h2>Understand what brings people back.</h2><p className="subtitle">Monthly summaries and retention reports will appear here once reporting is available.</p></section>}
       </div>
     </>}
   </section>

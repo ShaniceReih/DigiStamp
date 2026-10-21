@@ -78,13 +78,13 @@ export default function DigiStampHome({ userId, userName, email, onSignOut, sign
       <button type="button" aria-pressed={view === 'wallet'} onClick={() => { setLoading(true); setError(''); setView('wallet') }}>My wallet</button>
     </nav>}
     {memberships.length > 0 && view === 'merchant' ? <MerchantHome memberships={memberships} /> : <section className="customer-shell">
-      <header className="customer-greeting"><p>Hello{userName ? `, ${userName.split(' ')[0]}` : ' there'}.</p><h1>{customerTab === 'wallet' ? 'My collection' : customerTab === 'rewards' ? 'Rewards' : customerTab === 'play' ? 'Play' : 'Account'}</h1></header>
+      <header className="customer-greeting">{customerTab === 'wallet' && <p>Hello{userName ? `, ${userName.split(' ')[0]}` : ' there'}.</p>}<h1>{customerTab === 'wallet' ? 'My collection' : customerTab === 'rewards' ? 'Rewards' : customerTab === 'play' ? 'Play' : 'Account'}</h1></header>
       {customerTab === 'wallet' && <>
-      <section className="collection-banner" aria-label="Your café collection"><div><h3>Your cafés</h3><p>{loading ? 'Finding your cards…' : `${wallet.length} ${wallet.length === 1 ? 'café card' : 'café cards'} in your collection.`}</p></div>
+      <section className="collection-banner" aria-label="Your café collection"><div><p>{loading ? 'Finding your cards…' : `${wallet.length} ${wallet.length === 1 ? 'café card' : 'café cards'} in your collection.`}</p></div>
         <div className="collection-actions"><button type="button" onClick={() => setCustomerTab('rewards')}><StampIcon kind="gift" />My rewards</button><button type="button" onClick={() => setCustomerTab('account')}><StampIcon kind="qr" />My QR code</button></div>
       </section>
       <section className="wallet">
-      <div className="wallet-header"><h2>My Digital Stamps</h2><button type="button" className="wallet-refresh" disabled={loading} onClick={() => { setLoading(true); setError(''); setRefresh(value => value + 1) }}>Refresh</button></div>
+      <div className="wallet-header wallet-toolbar"><button type="button" className="wallet-refresh" disabled={loading} onClick={() => { setLoading(true); setError(''); setRefresh(value => value + 1) }}>Refresh</button></div>
       {loading && <div className="wallet-skeleton" role="status" aria-label="Loading your stamps"><span className="visually-hidden">Loading your stamps...</span><div aria-hidden="true" className="skeleton-line" /><div aria-hidden="true" className="skeleton-line skeleton-balance" /><div aria-hidden="true" className="skeleton-stamps">{[0,1,2,3,4].map(index => <span key={index} />)}</div><div aria-hidden="true" className="skeleton-line skeleton-caption" /></div>}
       {error && <p role="alert" className="error">Unable to load wallet: {error}</p>}
       {!loading && !error && !wallet.length && <div className="wallet-cafe wallet-empty"><StampIcon /><h3>No stamps yet!</h3><p>Visit a participating café to start earning rewards.</p></div>}
@@ -94,7 +94,7 @@ export default function DigiStampHome({ userId, userName, email, onSignOut, sign
       })}
       <p className="wallet-note">Each café has its own stamps and rewards. A cashier verifies purchases before awarding stamps. Reward redemption is coming soon.</p>
       </section></>}
-      {customerTab === 'rewards' && <section className="customer-rewards"><div className="wallet-header"><h2>Rewards at your cafés</h2></div><p className="subtitle">Your stamp balance stays separate at each café.</p>
+      {customerTab === 'rewards' && <section className="customer-rewards"><p className="subtitle">Your stamp balance stays separate at each café.</p>
         {loading && <p className="loading-state" role="status">Loading rewards…</p>}
         {!loading && !error && !rewards.length && <div className="wallet-empty"><StampIcon kind="gift" /><h3>No rewards published yet</h3><p>Rewards from your cafés will appear here when available.</p></div>}
         {error && <p className="error" role="alert">{error}</p>}
@@ -105,8 +105,8 @@ export default function DigiStampHome({ userId, userName, email, onSignOut, sign
         })}
         <p className="wallet-note">Reward redemption is coming soon. Reaching a target does not redeem a reward automatically.</p>
       </section>}
-      {customerTab === 'play' && <section className="play-preview"><span className="play-illustration" aria-hidden="true"><StampIcon kind="play" /></span><span className="coming-soon">Coming soon</span><h2>A small moment of fun.</h2><p>Quick café games are on the way. Games and their rewards will become available after a cashier verifies an eligible purchase.</p><p className="wallet-note">No games or prizes are available yet.</p><button className="primary-button" type="button" onClick={() => setCustomerTab('wallet')}>Back to my stamps</button></section>}
-      {customerTab === 'account' && <section className="customer-account"><h2>Account</h2><p className="profile-name">{userName || 'DigiStamp member'}</p><p className="subtitle">{email}</p>
+      {customerTab === 'play' && <section className="play-preview"><span className="play-illustration" aria-hidden="true"><StampIcon kind="play" /></span><span className="coming-soon">Coming soon</span><h2>A small moment of fun.</h2><p>Quick café games are on the way. Games and their rewards will become available after a cashier verifies an eligible purchase.</p><button className="primary-button" type="button" onClick={() => setCustomerTab('wallet')}>Back to my stamps</button></section>}
+      {customerTab === 'account' && <section className="customer-account"><p className="profile-name">{userName || 'DigiStamp member'}</p><p className="subtitle">{email}</p>
       <button type="button" className="wallet-refresh" onClick={onSettings}>Account settings</button>
       <CustomerPass userId={userId} />
       {error && <p className="error" role="status">{error}</p>}
