@@ -6,7 +6,7 @@ import CustomerQrScanner from './CustomerQrScanner'
 import StampIcon from './StampIcon'
 import { isCustomerCode } from './lib/customerQr'
 
-export default function CashierPanel({ shopId, shopName }: { shopId: string; shopName: string }) {
+export default function CashierPanel({ shopId }: { shopId: string }) {
   const [customerId, setCustomerId] = useState('')
   const [receipt, setReceipt] = useState('')
   const [message, setMessage] = useState('')
@@ -39,7 +39,7 @@ export default function CashierPanel({ shopId, shopName }: { shopId: string; sho
     finally { setSaving(false) }
   }
   return <section className="cashier-panel">
-    <h2>Award a stamp</h2><p className="subtitle">{shopName} · Verify the purchase before crediting a stamp.</p>
+    <h2>Award a stamp</h2><p className="subtitle">Verify the purchase before crediting a stamp.</p>
     <button type="button" className="wallet-refresh scan-customer-button" disabled={saving || scanning} onClick={() => { setScanning(true); setScanMessage('') }}><StampIcon kind="qr" />Scan customer QR</button>
     {scanning && <CustomerQrScanner onClose={() => setScanning(false)} onDetected={id => { setCustomerId(id); setScanning(false); setMessage(''); setScanMessage('Customer QR scanned. Verify the purchase and enter the receipt to continue.'); receiptRef.current?.focus() }} />}
     {scanMessage && <p className="success" role="status">{scanMessage}</p>}

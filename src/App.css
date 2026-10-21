@@ -128,6 +128,7 @@ button:disabled { opacity: 1; color: var(--muted); background: var(--neutral-act
 
 .wallet { text-align: left; }
 .wallet-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 20px; }
+.wallet-toolbar { justify-content: flex-end; }
 .wallet-header h2 { margin: 0; font-size: 19px; }
 .wallet-refresh {
   flex-shrink: 0;

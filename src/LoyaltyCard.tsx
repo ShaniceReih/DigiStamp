@@ -2,9 +2,9 @@ import StampIcon from './StampIcon'
 import { cafeStyle } from './lib/loyalty'
 import type { Cafe, Reward } from './lib/loyalty'
 
-type Props = { cafe: Cafe; stamps: number; points?: number; rewards: Reward[] }
+type Props = { cafe: Cafe; stamps: number; points?: number; rewards: Reward[]; showIdentity?: boolean }
 
-export default function LoyaltyCard({ cafe, stamps, points, rewards }: Props) {
+export default function LoyaltyCard({ cafe, stamps, points, rewards, showIdentity = true }: Props) {
   const active = rewards.filter(reward => reward.is_active).sort((a, b) => a.required_stamps - b.required_stamps)
   const next = active.find(reward => reward.required_stamps > stamps) ?? active[active.length - 1]
   // Earned stamps remain visible even when no reward target is configured.
@@ -12,10 +12,10 @@ export default function LoyaltyCard({ cafe, stamps, points, rewards }: Props) {
   const slots = target > 0 ? target : stamps
   return (
     <article className="wallet-cafe cafe-card" style={cafeStyle(cafe)} aria-label={`${cafe.name} stamp card`}>
-      <header className="cafe-card-header"><div className="cafe-identity">
+      {showIdentity && <header className="cafe-card-header"><div className="cafe-identity">
         {cafe.logo_url ? <img className="cafe-logo" src={cafe.logo_url} alt="" referrerPolicy="no-referrer" onError={event => { event.currentTarget.style.display = 'none' }} /> : <span className="cafe-logo-placeholder"><StampIcon kind="cafe" /></span>}
         <h3>{cafe.name}</h3>
-      </div></header>
+      </div></header>}
       <div className="stamp-balance"><p><strong>{stamps}</strong><span>{stamps === 1 ? 'stamp collected' : 'stamps collected'}</span></p>{target > 0 && <span className="stamp-target">{Math.min(stamps, target)} / {target}</span>}</div>
       {slots > 0 && <div className="wallet-grid" role="img" aria-label={target > 0 ? `${Math.min(stamps, target)} of ${target} stamps toward ${next.title}` : `${stamps} earned stamps. No reward target configured.`}>
         {Array.from({ length: Math.min(slots, 20) }, (_, index) => (
