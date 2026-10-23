@@ -68,6 +68,8 @@ export default function AdminPanel({ onBack, currentUserId }: { onBack: () => vo
     event.preventDefault()
     await run(async () => {
       const data = { ...draft }
+      let assignmentId = selected?.id ?? selected?.shop_id ?? null
+      let addedStaff = false
       if (entity === 'shop_staff') {
         if (!data.shop_id) throw new Error('Choose a café first.')
         if (staffAccount.trim()) {
@@ -86,11 +88,17 @@ export default function AdminPanel({ onBack, currentUserId }: { onBack: () => vo
           if (!user) throw new Error('Account not found. Enter the exact username or customer code. They need a DigiStamp account first.')
           data.user_id = user.id
         } else if (!selected?.id) throw new Error('Enter a username or customer code.')
+        // A different person or café is a separate membership, never a replacement
+        // for the staff record currently being viewed (especially its owner).
+        if (selected?.id && (data.user_id !== selected.user_id || data.shop_id !== selected.shop_id)) {
+          assignmentId = null
+          addedStaff = true
+        }
       }
-      const { error } = await supabase.rpc('admin_save', { p_entity:entity, p_id:selected?.id ?? selected?.shop_id ?? null, p_data:data, p_reason:reason.trim() })
+      const { error } = await supabase.rpc('admin_save', { p_entity:entity, p_id:assignmentId, p_data:data, p_reason:reason.trim() })
       if (error) throw error
       setSelected(null)
-      return 'Changes saved and recorded in the audit trail.'
+      return addedStaff ? 'Staff assignment added. The original staff assignment was kept.' : 'Changes saved and recorded in the audit trail.'
     })
   }
   async function accountAction(action: string) {
@@ -115,6 +123,7 @@ export default function AdminPanel({ onBack, currentUserId }: { onBack: () => vo
     {loading ? <p role="status">Loading records…</p> : <div className="admin-records">{!rows.length && <p>No records match this filter.</p>}{rows.map((row,index) => <article key={String(row.id ?? row.user_id ?? row.shop_id ?? index)}><div><strong>{primary(row)}</strong><small>{String(row.created_at ?? row.registered_at ?? '')}</small>{row.shop_id ? <small>Café: {String(cafes.find(cafe => cafe.id === row.shop_id)?.name ?? row.shop_id)}</small> : null}</div><button type="button" className="text-button" onClick={() => select(row)}>View{fields[entity] ? ' / edit' : ''}</button></article>)}</div>}
     <div className="admin-pagination"><button type="button" className="wallet-refresh" disabled={page===0||loading} onClick={() => { setPage(value=>value-1);setLoading(true) }}>Previous</button><span>Page {page+1}</span><button type="button" className="wallet-refresh" disabled={!more||loading} onClick={() => { setPage(value=>value+1);setLoading(true) }}>Next</button></div>
     {selected && <section className="admin-editor"><h3>{sections[entity]} details</h3><details><summary>Record data</summary><pre>{JSON.stringify(selected,null,2)}</pre></details>
+      {entity === 'shop_staff' && !!selected.id && <p className="wallet-note">Current role: {String(selected.role)}. Entering a different account or choosing another café adds a separate staff assignment and keeps this one.</p>}
       {fields[entity] && <form onSubmit={save}><fieldset disabled={busy}>{fields[entity].map(field => <label key={field}>{entity === 'shop_staff' && field === 'user_id' ? 'Username or customer code' : entity === 'shop_staff' && field === 'shop_id' ? 'Café' : labels[field] ?? field.replaceAll('_',' ')}
         {entity === 'shop_staff' && field === 'shop_id' ? <select required value={String(draft.shop_id ?? '')} onChange={event=>setDraft({...draft,shop_id:event.target.value})}><option value="">Choose a café</option>{!!draft.shop_id && !cafes.some(cafe=>cafe.id===draft.shop_id) && <option value={String(draft.shop_id)}>Current café</option>}{cafes.map(cafe=><option key={String(cafe.id)} value={String(cafe.id)}>{String(cafe.name)}</option>)}</select>
           : entity === 'shop_staff' && field === 'user_id' ? <input aria-label="Username or customer code" placeholder={selected.id ? 'Leave blank to keep this account' : '@username or DS-000001'} value={staffAccount} required={!selected.id} autoCapitalize="none" autoCorrect="off" spellCheck={false} onChange={event=>setStaffAccount(event.target.value)} />
