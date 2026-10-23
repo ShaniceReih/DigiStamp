@@ -15,10 +15,15 @@ Deno.serve(async request => {
     const { data: { user }, error: authError } = await service.auth.getUser(authorization.slice(7))
     if (authError || !user) return respond({ error: 'Your session is invalid. Sign in again' }, 401)
     const body = await request.json()
+    async function removeProfilePhoto(id: string) {
+      const {error} = await service.storage.from('profile-photos').remove([`${id}/profile.jpg`])
+      if (error) throw new Error('Could not remove the profile photo. Please retry account deletion.')
+    }
     if (body.action === 'delete_self') {
       if (body.confirmation !== 'DELETE') return respond({ error: 'Type DELETE to confirm' }, 400)
       const check = await scoped.rpc('check_account_deletion', { p_user_id:user.id })
       if (check.error) return respond({ error:check.error.message },400)
+      await removeProfilePhoto(user.id)
       const { error } = await service.auth.admin.deleteUser(user.id)
       if (error) return respond({ error: error.message }, 400)
       return respond({ success: true })
@@ -38,6 +43,7 @@ Deno.serve(async request => {
       const check = await scoped.rpc('check_account_deletion', { p_user_id:target })
       if (check.error) return respond({ error:check.error.message },400)
       await audit('DELETE_REQUEST')
+      await removeProfilePhoto(target)
       const { error } = await service.auth.admin.deleteUser(target)
       if (error) return respond({ error: error.message }, 400)
       return respond({ success: true })

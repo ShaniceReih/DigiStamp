@@ -21,6 +21,14 @@ RETURNING user_id;
 6. Open Account settings using the profile icon. The selected developer should now see an Admin badge and Open admin panel. Test a non-admin account too. Additional developer admins can be granted through Users → View / edit → Account administration, with an audit reason.
 7. Deploy the frontend only after migration and function verification. No SQL migration or Edge Function is applied automatically by a Git push or Vercel build.
 
+## Profile photos (migration 008)
+
+Apply `supabase/migrations/008_profile_photos.sql` in the Supabase SQL Editor after 007, then redeploy the `account-management` Edge Function before publishing the updated frontend. This migration creates a private `profile-photos` bucket, owner-scoped storage policies, the protected `avatar_path` column, and `update_my_avatar`. The existing `get_my_account` function includes the new column automatically. Git pushes and frontend deployments do not apply this migration or redeploy the function.
+
+Account settings provides photo preview, save, cancel, replacement, and removal. Accept JPG/PNG/WebP files up to 5 MB; the browser strips metadata and creates a 512px square JPEG before upload. Stored files are capped at 1 MB. Signed photo links expire after an hour and refresh while the app stays open. Photos remain private to their account. The header and customer Account screen display the photo with an initial as fallback.
+
+Account deletion removes the user's fixed photo path through the Storage API after checking owner/admin deletion guards and before deleting the Auth account. Storage cleanup errors stop deletion so it can be retried. Test `supabase/tests/profile_photos.sql` only against a disposable database; it rolls back its fixture rows. Local verification uses an embedded database with a simulated Storage schema and mocked browser uploads; real Supabase Storage uploads still require staging verification.
+
 ## Usernames and cashier lookup
 
 Usernames are case-insensitive, stored in lowercase, unique across DigiStamp, and contain 3–40 characters: a starting letter followed by letters, numbers, or underscores. Platform-like names are reserved. The signup form checks availability, and the database unique index remains authoritative during concurrent registrations or edits.

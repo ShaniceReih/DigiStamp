@@ -9,6 +9,8 @@ import ShopVisit from './ShopVisit'
 import WelcomeScreen from './WelcomeScreen'
 import StampIcon from './StampIcon'
 import UsernameField from './UsernameField'
+import ProfileAvatar from './ProfileAvatar'
+import { profilePhotoUrl } from './lib/profilePhoto'
 import { normalizeUsername, usernameError } from './lib/usernames'
 
 
@@ -33,6 +35,17 @@ function App() {
   const [username, setUsername] = useState('')
   const [screen, setScreen] = useState<'app' | 'settings' | 'admin'>('app')
   const [profileName, setProfileName] = useState('')
+  const [avatarPath, setAvatarPath] = useState<string | null>(null)
+  const [avatarImage, setAvatarImage] = useState<{owner:string | undefined;path:string | null;url:string | null} | null>(null)
+  const avatarUrl = avatarImage?.owner === user?.id && avatarImage?.path === avatarPath ? avatarImage?.url ?? null : null
+  const [photoVersion, setPhotoVersion] = useState(0)
+  useEffect(() => {
+    let active = true
+    const refresh = () => { void profilePhotoUrl(avatarPath).then(url=>{if(active)setAvatarImage({owner:user?.id,path:avatarPath,url})}).catch(()=>{if(active)setAvatarImage(null)}) }
+    refresh()
+    const timer = setInterval(refresh,50*60*1000)
+    return ()=>{active=false;clearInterval(timer)}
+  },[avatarPath,photoVersion,user?.id])
   useEffect(() => { window.scrollTo({ top:0, behavior:'instant' }) }, [screen])
 
   
@@ -68,7 +81,7 @@ const shopSlug = new URLSearchParams(
 
   useEffect(() => {
     let active = true
-    if (user?.id) void Promise.resolve(supabase.from('profiles').select('full_name').eq('id', user.id).maybeSingle()).then(({ data }) => { if (active) setProfileName(data?.full_name ?? '') }).catch(() => {})
+    if (user?.id) void Promise.resolve(supabase.rpc('get_my_account')).then(({ data }) => { if (active) {setProfileName(data?.full_name ?? '');setAvatarPath(data?.avatar_path ?? null)} }).catch(() => {})
     return () => { active = false }
   }, [user?.id])
 
@@ -178,13 +191,13 @@ const shopSlug = new URLSearchParams(
         <section className="auth-card dashboard">
           <header className="dashboard-header">
             <div className="app-brand"><span className="app-emblem"><StampIcon /></span><div><p className="wordmark">DigiStamp</p><p className="tagline">Scan. Play. Earn. Return.</p></div></div>
-            <button type="button" className="user-avatar" aria-label="Open account settings" onClick={() => setScreen('settings')}>{String(profileName || user.user_metadata?.full_name || user.email || 'D').slice(0, 1).toUpperCase()}</button>
+            <button type="button" className="profile-control" aria-label="Open account settings" onClick={() => setScreen('settings')}><ProfileAvatar name={String(profileName || user.user_metadata?.full_name || user.email || 'D')} src={avatarUrl} /><span>Profile</span></button>
           </header>
           <div className="welcome-box">
-            {screen === 'settings' ? <Suspense fallback={<p role="status">Loading account settings…</p>}><AccountSettings key={user.id} email={user.email ?? ''} onBack={() => setScreen('app')} onAdmin={() => setScreen('admin')} onSaved={setProfileName} onDeleted={() => { setUser(null); setScreen('app'); setProfileName(''); setShowWelcome(true) }} /></Suspense> : screen === 'admin' ? <Suspense fallback={<p role="status">Loading admin panel…</p>}><AdminPanel currentUserId={user.id} onBack={() => setScreen('settings')} /></Suspense> : shopSlug ? (
+            {screen === 'settings' ? <Suspense fallback={<p role="status">Loading account settings…</p>}><AccountSettings key={user.id} userId={user.id} photoUrl={avatarUrl} onPhotoSaved={path=>{setAvatarPath(path);setPhotoVersion(value=>value+1)}} email={user.email ?? ''} onBack={() => setScreen('app')} onAdmin={() => setScreen('admin')} onSaved={setProfileName} onDeleted={() => { setUser(null); setScreen('app'); setProfileName(''); setAvatarPath(null); setShowWelcome(true) }} /></Suspense> : screen === 'admin' ? <Suspense fallback={<p role="status">Loading admin panel…</p>}><AdminPanel currentUserId={user.id} onBack={() => setScreen('settings')} /></Suspense> : shopSlug ? (
               <ShopVisit userId={user.id} shopSlug={shopSlug} />
             ) : (
-              <DigiStampHome key={user.id} userId={user.id} userName={profileName || String(user.user_metadata?.full_name || '')} email={user.email ?? ''} onSignOut={handleLogout} signingOut={loading} onSettings={() => setScreen('settings')} />
+              <DigiStampHome key={user.id} photoUrl={avatarUrl} userId={user.id} userName={profileName || String(user.user_metadata?.full_name || '')} email={user.email ?? ''} onSignOut={handleLogout} signingOut={loading} onSettings={() => setScreen('settings')} />
             )}
             <div className="account-details app-account-footer">
               <p>Signed in as</p>

@@ -6,13 +6,14 @@ import StampIcon from './StampIcon'
 import LoyaltyCard from './LoyaltyCard'
 import MerchantHome from './MerchantHome'
 import CustomerPass from './CustomerPass'
+import ProfileAvatar from './ProfileAvatar'
 
 type Membership = { shop_id: string; role: 'owner' | 'cashier' }
 type WalletRow = { shop_id: string; stamps: number; points: number }
 
-type Props = { userId: string; userName: string; email: string; onSignOut: () => void; signingOut: boolean; onSettings: () => void }
+type Props = { userId: string; userName: string; photoUrl: string | null; email: string; onSignOut: () => void; signingOut: boolean; onSettings: () => void }
 
-export default function DigiStampHome({ userId, userName, email, onSignOut, signingOut, onSettings }: Props) {
+export default function DigiStampHome({ userId, userName, photoUrl, email, onSignOut, signingOut, onSettings }: Props) {
   const [memberships, setMemberships] = useState<Membership[]>([])
   const [wallet, setWallet] = useState<WalletRow[]>([])
   const [shops, setShops] = useState<Cafe[]>([])
@@ -106,7 +107,7 @@ export default function DigiStampHome({ userId, userName, email, onSignOut, sign
         <p className="wallet-note">Reward redemption is coming soon. Reaching a target does not redeem a reward automatically.</p>
       </section>}
       {customerTab === 'play' && <section className="play-preview"><span className="play-illustration" aria-hidden="true"><StampIcon kind="play" /></span><span className="coming-soon">Coming soon</span><h2>A small moment of fun.</h2><p>Quick café games are on the way. Games and their rewards will become available after a cashier verifies an eligible purchase.</p><button className="primary-button" type="button" onClick={() => setCustomerTab('wallet')}>Back to my stamps</button></section>}
-      {customerTab === 'account' && <section className="customer-account"><p className="profile-name">{userName || 'DigiStamp member'}</p><p className="subtitle">{email}</p>
+      {customerTab === 'account' && <section className="customer-account"><div className="profile-card"><div className="profile-card-identity"><ProfileAvatar large name={userName || email} src={photoUrl} /><div><p className="profile-name">{userName || 'DigiStamp member'}</p><p className="subtitle">{email}</p></div></div></div>
       <button type="button" className="wallet-refresh" onClick={onSettings}>Account settings</button>
       <CustomerPass userId={userId} />
       {error && <p className="error" role="status">{error}</p>}
