@@ -225,6 +225,33 @@ input[type="color"] { padding: 5px; cursor: pointer; }
 .danger-button:hover:not(:disabled) { color: white; background: var(--error); }
 .dashboard:has(.account-settings) .app-account-footer, .dashboard:has(.admin-panel) .app-account-footer { display: none; }
 .admin-panel { text-align: left; }
+.admin-workspace { margin-top: 24px; }
+.admin-navigation { display: none; }
+.admin-mobile-navigation { display: block; margin-top: 24px; }
+.admin-content { min-width: 0; }
+.admin-screen-title { margin: 16px 0 24px; font-size: 22px; font-weight: 650; overflow-wrap: anywhere; scroll-margin-top: 20px; }
+.admin-screen-title:focus { outline: none; }
+.admin-row-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.admin-details { margin: 0; }
+.admin-details > div { padding: 14px 0; border-bottom: 1px solid var(--line); }
+.admin-details dt { color: var(--muted); font-size: 13px; text-transform: capitalize; }
+.admin-details dd { margin: 6px 0 0; font-size: 15px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.admin-content .admin-editor { margin-top: 0; padding-top: 0; border-top: 0; }
+.admin-content .admin-filters { grid-template-columns: repeat(2,minmax(0,1fr)); }
+@media (max-width: 599px) {
+  .admin-content .admin-filters { grid-template-columns: 1fr; }
+  .admin-row-actions { flex-direction: column; gap: 0; }
+}
+@media (min-width: 800px) {
+  .admin-mobile-navigation { display: none; }
+  .admin-workspace { display: grid; grid-template-columns: 190px minmax(0,1fr); gap: 32px; }
+  .admin-navigation { display: block; border-right: 1px solid var(--line); padding-right: 20px; }
+  .admin-navigation > div + div { margin-top: 24px; }
+  .admin-navigation p { margin: 0 0 8px; font-size: 12px; color: var(--muted); }
+  .admin-navigation button { display: block; width: 100%; min-height: 44px; padding: 10px 12px; border: 0; border-radius: 8px; background: transparent; color: var(--ink); text-align: left; font: inherit; font-size: 14px; cursor: pointer; }
+  .admin-navigation button[aria-current="page"] { background: var(--paper); font-weight: 700; }
+  .admin-navigation button:hover { background: var(--paper); }
+}
 .admin-filters { display: grid; gap: 16px; margin-bottom: 20px; }
 .admin-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
 .admin-records { border-block: 1px solid var(--line); }

@@ -25,6 +25,8 @@ Use self-hosted Manrope for app text and controls, and Fraunces for the DigiStam
 
 ## Validation
 
+Developer administration separates section lists from read-only record details and edit forms. Group desktop navigation into People, Cafés & rewards, and Activity; use a labeled native section selector on mobile. Lists identify people by name and username, with distinct View and Edit actions. Keep search, café filtering, and pagination when returning from a record. Move focus to the screen heading when navigating, and show invitations and creation forms without the list underneath.
+
 Run the production build and lint after UI changes. Check the welcome, authentication, wallet, café visit, merchant QR, and cashier screens at mobile and desktop widths, including long content and empty states. Visual fixtures must stay separate from production data and permissions.
 
 ## Taste Skill refinement

@@ -43,6 +43,8 @@ A sole café owner must transfer ownership first. The last developer admin canno
 
 ## Developer panel
 
+The panel separates People, Cafés & rewards, and Activity. Choose a section in the desktop sidebar or the mobile Admin section menu. Each section has its own searchable, paginated list. View opens a read-only details screen; Edit opens a separate form. Returning to the list preserves its café filter, search, and page. Invitations and new staff/café/reward forms also open separately. Staff lists resolve account names, and cashier assignment checks usernames or customer codes while typing. Assigning another person creates a separate membership and preserves the existing owner.
+
 The admin panel has paginated search and café filtering for users, cafés, staff assignments, rewards, stamp balances, purchases, redemptions, customization access, developer admins, and the audit trail. Users are registered globally; café filtering identifies their staff or loyalty-account associations rather than inventing a café-specific registration event.
 
 Admins can invite users, edit full names/usernames, request sign-in email corrections with confirmation, delete eligible accounts, assign/remove staff, grant/remove other developer admins, create/edit cafés and rewards, adjust stamp/point balances, and manage customization access. Mutations record a time, affected record, applicable before/after values, and actor when available. Auth-service actions can have a null actor; admin Auth operations additionally record the authenticated administrator's request. Admin edits require a reason. Invitations create customers; staff/admin access is assigned separately.
