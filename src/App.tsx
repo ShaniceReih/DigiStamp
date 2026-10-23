@@ -191,7 +191,7 @@ const shopSlug = new URLSearchParams(
         <section className="auth-card dashboard">
           <header className="dashboard-header">
             <div className="app-brand"><span className="app-emblem"><StampIcon /></span><div><p className="wordmark">DigiStamp</p><p className="tagline">Scan. Play. Earn. Return.</p></div></div>
-            <button type="button" className="profile-control" aria-label="Open account settings" onClick={() => setScreen('settings')}><ProfileAvatar name={String(profileName || user.user_metadata?.full_name || user.email || 'D')} src={avatarUrl} /><span>Profile</span></button>
+            <button type="button" className="profile-control" aria-label="Open account settings" onClick={() => setScreen('settings')}><ProfileAvatar iconFallback name={String(profileName || user.user_metadata?.full_name || user.email || 'D')} src={avatarUrl} /></button>
           </header>
           <div className="welcome-box">
             {screen === 'settings' ? <Suspense fallback={<p role="status">Loading account settings…</p>}><AccountSettings key={user.id} userId={user.id} photoUrl={avatarUrl} onPhotoSaved={path=>{setAvatarPath(path);setPhotoVersion(value=>value+1)}} email={user.email ?? ''} onBack={() => setScreen('app')} onAdmin={() => setScreen('admin')} onSaved={setProfileName} onDeleted={() => { setUser(null); setScreen('app'); setProfileName(''); setAvatarPath(null); setShowWelcome(true) }} /></Suspense> : screen === 'admin' ? <Suspense fallback={<p role="status">Loading admin panel…</p>}><AdminPanel currentUserId={user.id} onBack={() => setScreen('settings')} /></Suspense> : shopSlug ? (

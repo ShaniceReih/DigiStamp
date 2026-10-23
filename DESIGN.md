@@ -25,7 +25,7 @@ Use self-hosted Manrope for app text and controls, and Fraunces for the DigiStam
 
 ## Validation
 
-Profiles use an explicit framed Profile button in the shared header, with a ringed photo or initial. Keep the label visible on small screens. Account settings and the customer Account tab use a warm paper identity card with the same frame; photo preview, save, cancel, and remove controls stay together. Preserve 44px controls and visible focus on the file picker. Signed photo URLs and ownership rules are handled by the photo service and migration 008.
+Profiles use a circular framed button in the shared header, with a ringed photo or person icon. Keep it icon-only at every width, with an accessible account-settings name and visible keyboard focus. Account settings and the customer Account tab use a warm paper identity card with the same frame; photo preview, save, cancel, and remove controls stay together. Preserve 44px controls and visible focus on the file picker. Signed photo URLs and ownership rules are handled by the photo service and migration 008.
 
 Developer administration separates section lists from read-only record details and edit forms. Group desktop navigation into People, Cafés & rewards, and Activity; use a labeled native section selector on mobile. Lists identify people by name and username, with distinct View and Edit actions. Keep search, café filtering, and pagination when returning from a record. Move focus to the screen heading when navigating, and show invitations and creation forms without the list underneath.
 
