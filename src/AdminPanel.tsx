@@ -1,9 +1,20 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import type { FormEvent } from 'react'
 import { supabase } from './lib/supabase'
 import { errorText } from './lib/loyalty'
 
 type Row = Record<string, unknown>
+async function findStaffAccount(account: string, isActive = () => true): Promise<Row | undefined> {
+  let page = 0
+  while (isActive()) {
+    const { data, error } = await supabase.rpc('admin_list', { p_entity:'profiles', p_search:account, p_page:page })
+    if (error) throw error
+    const user = (data?.rows ?? []).find((row: Row) =>
+      String(row.username ?? '').toLowerCase() === account || String(row.customer_code ?? '').toLowerCase() === account)
+    if (user || !data?.has_more) return user
+    page += 1
+  }
+}
 const sections: Record<string, string> = { profiles: 'Users', shops: 'Cafés', shop_staff: 'Staff assignments', rewards: 'Rewards', loyalty_accounts: 'Stamp balances', purchase_transactions: 'Purchases', reward_redemptions: 'Redemptions', shop_feature_access: 'Feature access', platform_admins: 'Developer admins', audit_events: 'Audit trail' }
 const fields: Record<string, string[]> = {
   profiles: ['full_name','username'], shops: ['name','description','address','qr_code','brand_color','card_color','logo_url','stamp_icon'], shop_staff: ['shop_id','user_id','role'],
@@ -35,6 +46,23 @@ export default function AdminPanel({ onBack, currentUserId }: { onBack: () => vo
   const [inviteName, setInviteName] = useState('')
   const [inviteUsername, setInviteUsername] = useState('')
   const [staffAccount, setStaffAccount] = useState('')
+  const staffFeedbackId = useId()
+  const normalizedStaffAccount = staffAccount.trim().replace(/^@/, '').toLowerCase()
+  const [staffLookup, setStaffLookup] = useState<{account:string; user?:Row; error?:string} | null>(null)
+  const staffLookupCurrent = staffLookup?.account === normalizedStaffAccount
+  useEffect(() => {
+    if (entity !== 'shop_staff' || !selected || !normalizedStaffAccount) return
+    let active = true
+    const timer = setTimeout(async () => {
+      try {
+        const user = await findStaffAccount(normalizedStaffAccount, () => active)
+        if (active) setStaffLookup({account:normalizedStaffAccount, user})
+      } catch {
+        if (active) setStaffLookup({account:normalizedStaffAccount, error:'Could not check this account. Try again or save to retry.'})
+      }
+    }, 400)
+    return () => { active = false; clearTimeout(timer) }
+  }, [entity, selected, normalizedStaffAccount])
   useEffect(() => {
     let active = true
     async function load() {
@@ -74,17 +102,7 @@ export default function AdminPanel({ onBack, currentUserId }: { onBack: () => vo
         if (!data.shop_id) throw new Error('Choose a café first.')
         if (staffAccount.trim()) {
           const account = staffAccount.trim().replace(/^@/, '').toLowerCase()
-          let user: Row | undefined
-          let lookupPage = 0
-          let hasMore = true
-          while (hasMore && !user) {
-            const result = await supabase.rpc('admin_list', { p_entity:'profiles', p_search:account, p_page:lookupPage })
-            if (result.error) throw result.error
-            user = (result.data?.rows ?? []).find((row: Row) =>
-              String(row.username ?? '').toLowerCase() === account || String(row.customer_code ?? '').toLowerCase() === account)
-            hasMore = !!result.data?.has_more
-            lookupPage += 1
-          }
+          const user = await findStaffAccount(account)
           if (!user) throw new Error('Account not found. Enter the exact username or customer code. They need a DigiStamp account first.')
           data.user_id = user.id
         } else if (!selected?.id) throw new Error('Enter a username or customer code.')
@@ -126,7 +144,12 @@ export default function AdminPanel({ onBack, currentUserId }: { onBack: () => vo
       {entity === 'shop_staff' && !!selected.id && <p className="wallet-note">Current role: {String(selected.role)}. Entering a different account or choosing another café adds a separate staff assignment and keeps this one.</p>}
       {fields[entity] && <form onSubmit={save}><fieldset disabled={busy}>{fields[entity].map(field => <label key={field}>{entity === 'shop_staff' && field === 'user_id' ? 'Username or customer code' : entity === 'shop_staff' && field === 'shop_id' ? 'Café' : labels[field] ?? field.replaceAll('_',' ')}
         {entity === 'shop_staff' && field === 'shop_id' ? <select required value={String(draft.shop_id ?? '')} onChange={event=>setDraft({...draft,shop_id:event.target.value})}><option value="">Choose a café</option>{!!draft.shop_id && !cafes.some(cafe=>cafe.id===draft.shop_id) && <option value={String(draft.shop_id)}>Current café</option>}{cafes.map(cafe=><option key={String(cafe.id)} value={String(cafe.id)}>{String(cafe.name)}</option>)}</select>
-          : entity === 'shop_staff' && field === 'user_id' ? <input aria-label="Username or customer code" placeholder={selected.id ? 'Leave blank to keep this account' : '@username or DS-000001'} value={staffAccount} required={!selected.id} autoCapitalize="none" autoCorrect="off" spellCheck={false} onChange={event=>setStaffAccount(event.target.value)} />
+          : entity === 'shop_staff' && field === 'user_id' ? <><input aria-label="Username or customer code" placeholder={selected.id ? 'Leave blank to keep this account' : '@username or DS-000001'} value={staffAccount} required={!selected.id} autoCapitalize="none" autoCorrect="off" spellCheck={false} aria-describedby={staffFeedbackId} aria-invalid={!!normalizedStaffAccount && staffLookupCurrent && !staffLookup?.user && !staffLookup?.error} onChange={event=>{setStaffAccount(event.target.value);setStaffLookup(null)}} />
+            <span id={staffFeedbackId} role="status" className={`field-feedback${normalizedStaffAccount && staffLookupCurrent && !staffLookup?.user ? ' field-invalid' : ''}`}>
+              {!normalizedStaffAccount ? selected.id ? 'Leave blank to keep the current account.' : 'Enter an existing DigiStamp username or customer code.'
+                : !staffLookupCurrent ? 'Checking account…'
+                : staffLookup?.error || (staffLookup?.user ? `Account found: ${staffLookup.user.full_name || staffLookup.user.username} (@${staffLookup.user.username}) · ${staffLookup.user.customer_code}` : 'Account not found. Check the username or ask them to create an account.')}
+            </span></>
           : typeof draft[field] === 'boolean' ? <select value={String(draft[field])} onChange={event => setDraft({...draft,[field]:event.target.value==='true'})}><option value="true">Yes</option><option value="false">No</option></select>
           : options[field] ? <select value={String(draft[field] ?? '')} onChange={event => setDraft({...draft,[field]:event.target.value})}>{options[field].filter(value=>field!=='role'||value!=='customer').map(value=><option key={value}>{value}</option>)}</select>
           : <input value={Array.isArray(draft[field]) ? (draft[field] as string[]).join(', ') : String(draft[field] ?? '')} type={['stamps','points','required_stamps'].includes(field)?'number':'text'} min="0" onChange={event => setDraft({...draft,[field]:field==='features'?event.target.value.split(',').map(value=>value.trim()).filter(Boolean):['stamps','points','required_stamps'].includes(field)?Number(event.target.value):event.target.value || (field==='logo_url'?null:'')})} />}
