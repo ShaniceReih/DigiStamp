@@ -11,6 +11,7 @@ import StampIcon from './StampIcon'
 import UsernameField from './UsernameField'
 import ProfileAvatar from './ProfileAvatar'
 import { profilePhotoUrl } from './lib/profilePhoto'
+import { useProfileRevision } from './lib/profileUpdates'
 import { normalizeUsername, usernameError } from './lib/usernames'
 
 
@@ -35,6 +36,7 @@ function App() {
   const [username, setUsername] = useState('')
   const [screen, setScreen] = useState<'app' | 'settings' | 'admin'>('app')
   const [profileName, setProfileName] = useState('')
+  const profileRevision = useProfileRevision()
   const [avatarPath, setAvatarPath] = useState<string | null>(null)
   const [avatarImage, setAvatarImage] = useState<{owner:string | undefined;path:string | null;url:string | null} | null>(null)
   const avatarUrl = avatarImage?.owner === user?.id && avatarImage?.path === avatarPath ? avatarImage?.url ?? null : null
@@ -83,7 +85,7 @@ const shopSlug = new URLSearchParams(
     let active = true
     if (user?.id) void Promise.resolve(supabase.rpc('get_my_account')).then(({ data }) => { if (active) {setProfileName(data?.full_name ?? '');setAvatarPath(data?.avatar_path ?? null)} }).catch(() => {})
     return () => { active = false }
-  }, [user?.id])
+  }, [user?.id,profileRevision])
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()

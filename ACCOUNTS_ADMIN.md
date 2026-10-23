@@ -31,6 +31,10 @@ Account deletion removes the user's fixed photo path through the Storage API aft
 
 ## Usernames and cashier lookup
 
+Apply `supabase/migrations/009_profile_identity_sync.sql` after 008 to synchronize current usernames and full names into Auth user metadata. It also repairs existing stale metadata, preserving unrelated metadata keys. Both self-service and developer-admin edits run the same database trigger. Profiles remain the canonical identity source; UUIDs, customer codes, memberships, balances, and purchase references do not change. Audit snapshots retain the original values so username changes remain traceable.
+
+Successful profile edits notify the current page and other open tabs. Account headers, customer QR username labels, and admin lists refresh on those notifications and when a tab regains focus. Read-only admin details refresh with their list; unsaved edit fields remain intact. Other devices retrieve current values when returning to the app or refreshing. This does not require a Realtime publication.
+
 Usernames are case-insensitive, stored in lowercase, unique across DigiStamp, and contain 3–40 characters: a starting letter followed by letters, numbers, or underscores. Platform-like names are reserved. The signup form checks availability, and the database unique index remains authoritative during concurrent registrations or edits.
 
 Existing accounts receive editable usernames such as `ds_000001`. An existing custom username is normalized, not silently reassigned; conflicting pre-existing usernames stop migration. Legacy signups without a username receive a unique editable fallback. Users change their assigned default through Account settings. Supabase UUIDs and DS customer codes remain unchanged.

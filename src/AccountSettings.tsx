@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { supabase } from './lib/supabase'
 import { errorText } from './lib/loyalty'
@@ -6,11 +6,14 @@ import { normalizeUsername, usernameError } from './lib/usernames'
 import UsernameField from './UsernameField'
 import ProfileAvatar from './ProfileAvatar'
 import { avatarBucket, prepareProfilePhoto, validateProfilePhoto } from './lib/profilePhoto'
+import { notifyProfileUpdated, useProfileRevision } from './lib/profileUpdates'
 
 type Account = { full_name: string; username: string; customer_code: string; roles: string[]; avatar_path?: string | null }
 type Props = { userId: string; photoUrl: string | null; onPhotoSaved: (path: string | null) => void; email: string; onBack: () => void; onAdmin: () => void; onSaved: (name: string) => void; onDeleted: () => void }
 export default function AccountSettings({ userId, photoUrl, onPhotoSaved, email, onBack, onAdmin, onSaved, onDeleted }: Props) {
   const [account, setAccount] = useState<Account | null>(null)
+  const loadedAccount = useRef<Account | null>(null)
+  const profileRevision = useProfileRevision()
   const [name, setName] = useState('')
   const [username, setUsername] = useState('')
   const [newEmail, setNewEmail] = useState(email)
@@ -60,12 +63,18 @@ export default function AccountSettings({ userId, photoUrl, onPhotoSaved, email,
         const { data, error } = await supabase.rpc('get_my_account')
         if (error) throw error
         if (!data) throw new Error('Account details are unavailable.')
-        if (active) { setAccount(data as Account); setName(data.full_name ?? ''); setUsername(data.username) }
+        if (active) {
+          const previous = loadedAccount.current
+          setAccount(data as Account)
+          setName(current=>!previous || current===(previous.full_name ?? '') ? data.full_name ?? '' : current)
+          setUsername(current=>!previous || current===previous.username ? data.username : current)
+          loadedAccount.current = data as Account
+        }
       } catch (error) { if (active) { setFailed(true); setMessage(errorText(error)) } }
     }
     void load()
     return () => { active = false }
-  }, [attempt])
+  }, [attempt,profileRevision])
   async function run(task: () => Promise<string>) {
     if (busy) return
     setBusy(true); setMessage('')
@@ -80,7 +89,9 @@ export default function AccountSettings({ userId, photoUrl, onPhotoSaved, email,
       const { error } = await supabase.rpc('update_my_profile', { p_full_name: name.trim(), p_username: normalizeUsername(username) })
       if (error) throw error
       setAccount(previous => previous && { ...previous, full_name: name.trim(), username: normalizeUsername(username) })
+      if(loadedAccount.current)loadedAccount.current={...loadedAccount.current,full_name:name.trim(),username:normalizeUsername(username)}
       onSaved(name.trim())
+      notifyProfileUpdated()
       return 'Profile updated.'
     })
   }

@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { supabase } from './lib/supabase'
 import { errorText } from './lib/loyalty'
+import { notifyProfileUpdated, useProfileRevision } from './lib/profileUpdates'
 
 type Row = Record<string, unknown>
 async function findStaffAccount(account: string, isActive = () => true): Promise<Row | undefined> {
@@ -31,6 +32,7 @@ const empty: Record<string, Row> = { shops:{ name:'', description:'',address:'',
 
 export default function AdminPanel({ onBack, currentUserId }: { onBack: () => void; currentUserId: string }) {
   const [entity, setEntity] = useState('profiles')
+  const profileRevision = useProfileRevision()
   const [rows, setRows] = useState<Row[]>([])
   const [cafes, setCafes] = useState<Row[]>([])
   const [shop, setShop] = useState('')
@@ -42,6 +44,8 @@ export default function AdminPanel({ onBack, currentUserId }: { onBack: () => vo
   const [selected, setSelected] = useState<Row | null>(null)
   const [editing, setEditing] = useState(false)
   const [people, setPeople] = useState<Record<string, Row>>({})
+  const viewedRecord = useRef<Row | null>(null)
+  useEffect(()=>{viewedRecord.current=editing?null:selected},[selected,editing])
   const headingRef = useRef<HTMLHeadingElement>(null)
   const [draft, setDraft] = useState<Row>({})
   const [reason, setReason] = useState('')
@@ -88,6 +92,10 @@ export default function AdminPanel({ onBack, currentUserId }: { onBack: () => vo
         if (shops.error) throw shops.error
         const records: Row[] = (result.data?.rows ?? []).slice(0,50)
         if (active) { setRows(records); setMore(!!result.data?.has_more); setCafes((shops.data?.rows ?? []).slice(0,50)); setLoading(false) }
+        if(active && viewedRecord.current?.id) {
+          const updated = records.find(row=>row.id===viewedRecord.current?.id)
+          if(updated)setSelected(current=>current?.id===updated.id?updated:current)
+        }
         const ids = [...new Set(records.flatMap(row => [row.user_id, row.customer_id]).filter((id): id is string => typeof id === 'string'))]
         const identities = await Promise.all(ids.map(async id => {
           try {
@@ -101,7 +109,7 @@ export default function AdminPanel({ onBack, currentUserId }: { onBack: () => vo
     }
     const timer = setTimeout(() => void load(), 250)
     return () => { active = false; clearTimeout(timer) }
-  }, [entity, shop, search, page, refresh])
+  }, [entity, shop, search, page, refresh,profileRevision])
   function select(row: Row, edit = false) {
     setEditing(edit)
     setStaffAccount('')
@@ -145,6 +153,7 @@ export default function AdminPanel({ onBack, currentUserId }: { onBack: () => vo
       }
       const { error } = await supabase.rpc('admin_save', { p_entity:entity, p_id:assignmentId, p_data:data, p_reason:reason.trim() })
       if (error) throw error
+      if(entity==='profiles')notifyProfileUpdated()
       setSelected(null)
       return addedStaff ? 'Staff assignment added. The original staff assignment was kept.' : 'Changes saved and recorded in the audit trail.'
     })
@@ -161,7 +170,7 @@ export default function AdminPanel({ onBack, currentUserId }: { onBack: () => vo
   }
   const personName = (id: unknown) => {
     const person = people[String(id)]
-    return person ? String(person.full_name || person.username || person.customer_code) : String(id ?? 'Unknown account')
+    return person ? `${person.full_name || person.username || person.customer_code}${person.username ? ` (@${person.username})` : ''}` : String(id ?? 'Unknown account')
   }
   const primary = (row: Row) => String(row.full_name || row.username || row.name || row.title || row.receipt_reference || (row.user_id ? personName(row.user_id) : row.customer_id ? personName(row.customer_id) : row.operation || cafes.find(cafe=>cafe.id===row.shop_id)?.name || row.id || row.shop_id))
   const displayValue = (key: string, value: unknown): string => {
