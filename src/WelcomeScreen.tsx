@@ -9,8 +9,7 @@ export default function WelcomeScreen({ onSignIn, onSignUp }: WelcomeScreenProps
       <section className="welcome-screen" aria-labelledby="welcome-title">
         <div className="welcome-content">
           <header className="welcome-brand">
-            <div className="welcome-emblem" aria-hidden="true"><StampIcon /></div>
-            <h1 id="welcome-title">DigiStamp</h1>
+            <h1 id="welcome-title"><img className="brand-wordmark" src="/brand/digistamp-wordmark.svg" alt="DigiStamp" width="577" height="129" /></h1>
             <p className="welcome-tagline">Scan. Play. Earn. Return.</p>
           </header>
           <div className="welcome-intro">

@@ -7,7 +7,6 @@ import './App.css'
 import DigiStampHome from './DigiStampHome'
 import ShopVisit from './ShopVisit'
 import WelcomeScreen from './WelcomeScreen'
-import StampIcon from './StampIcon'
 import UsernameField from './UsernameField'
 import ProfileAvatar from './ProfileAvatar'
 import { profilePhotoUrl } from './lib/profilePhoto'
@@ -192,7 +191,7 @@ const shopSlug = new URLSearchParams(
       <main className="page">
         <section className="auth-card dashboard">
           <header className="dashboard-header">
-            <div className="app-brand"><span className="app-emblem"><StampIcon /></span><div><p className="wordmark">DigiStamp</p><p className="tagline">Scan. Play. Earn. Return.</p></div></div>
+            <div className="app-brand"><div><p className="wordmark"><img className="brand-wordmark" src="/brand/digistamp-wordmark.svg" alt="DigiStamp" width="577" height="129" /></p><p className="tagline">Scan. Play. Earn. Return.</p></div></div>
             <button type="button" className="profile-control" aria-label="Open account settings" onClick={() => setScreen('settings')}><ProfileAvatar iconFallback name={String(profileName || user.user_metadata?.full_name || user.email || 'D')} src={avatarUrl} /></button>
           </header>
           <div className="welcome-box">
@@ -242,8 +241,7 @@ const shopSlug = new URLSearchParams(
           &larr; Back to welcome
         </button>
         <header className="auth-header">
-          <div className="brand-icon"><StampIcon /></div>
-          <p className="wordmark">DigiStamp</p>
+          <p className="wordmark"><img className="brand-wordmark" src="/brand/digistamp-wordmark.svg" alt="DigiStamp" width="577" height="129" /></p>
           <p className="tagline">Scan. Play. Earn. Return.</p>
         </header>
 

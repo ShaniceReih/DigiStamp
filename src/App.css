@@ -39,6 +39,8 @@ h2 { margin: 0 0 8px; font-size: 21px; line-height: 1.4; font-weight: 650; lette
 h3 { margin: 0 0 10px; font-size: 17px; line-height: 1.4; font-weight: 650; }
 p { line-height: 1.65; }
 .wordmark { font-family: 'Fraunces', Georgia, serif; font-size: 36px; font-weight: 600; font-variation-settings: 'SOFT' 35, 'WONK' 1, 'opsz' 36; }
+.brand-wordmark { display: block; width: 224px; max-width: 100%; height: auto; margin-inline: auto; }
+.app-brand .brand-wordmark { width: 158px; margin-inline: 0; }
 .tagline { margin: 8px 0 0; color: var(--muted); font-size: 12px; font-weight: 500; letter-spacing: .04em; }
 .subtitle { margin: 0 0 26px; color: var(--muted); font-size: 13px; line-height: 1.7; }
 
